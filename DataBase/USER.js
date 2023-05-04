@@ -1,4 +1,4 @@
-const SEQ = require('./DB_con') ;
+const SEQ = require('./DBcon') ;
 const sequelize = require('sequelize') ;
 
 const user =  SEQ.define('user',{

@@ -1,11 +1,11 @@
-const SEQ = require('./DB_con');
+const SEQ = require('./DBcon');
 const SEQUELIZE = require('sequelize');
 
 const Post = SEQ.define('Post',{
     id :{
         type : SEQUELIZE.INTEGER ,
         primaryKey : true,
-        allowNull : false , 
+        allowNull : false ,
         autoIncrement : true
     },
     title : {

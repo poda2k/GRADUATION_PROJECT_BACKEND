@@ -9,13 +9,13 @@ exports.gethome = (req, res , next) => {
     .catch(err =>{
         console.log(err);
     });
-   
+
 }
 
 exports.posthome = (req, res , next) => {
     // const id = 14 ;
     const name  = 'poda';
-    const imageUrl = 'image';
+    const imageUrl = req.body.imageUrl;
     const title = req.body.title;
     const content = req.body.content;
 
@@ -35,5 +35,26 @@ exports.posthome = (req, res , next) => {
     .catch(err =>{
         console.log(err);
     })
-    
+
+}
+
+exports.GETsinglepost = (req, res , next) => {
+    const id = req.params.postId ;
+   
+    posts.findOne({
+        where :{
+            id : id,
+        }
+    }).then( result => {
+        if(!result) {
+            console.log('fetching failed');
+        }
+        
+        res.status(200).json({
+            massage : "post fetched" ,
+            post : result
+        })
+    }).catch( err =>{
+        console.log(err);
+    })
 }
