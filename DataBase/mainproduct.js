@@ -1,5 +1,5 @@
 const  Sequelize = require('sequelize');
-const connec = require('./DBcon');
+const connec = require('./DB_con');
 
 
 
@@ -39,5 +39,6 @@ module.exports= {
     subcat,
     topic
 }
+
 
 

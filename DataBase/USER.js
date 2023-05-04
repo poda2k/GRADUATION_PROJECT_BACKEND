@@ -1,7 +1,7 @@
-const SEQ = require('./DBcon') ;
+const SEQ = require('./DB_con') ;
 const sequelize = require('sequelize') ;
 
-const user =  SEQ.define('user',{
+const user =  SEQ.define('userTabel',{
     id : {
         type : sequelize.INTEGER ,
         autoIncrement : true ,

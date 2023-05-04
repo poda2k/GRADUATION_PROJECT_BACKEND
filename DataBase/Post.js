@@ -1,4 +1,4 @@
-const SEQ = require('./DBcon');
+const SEQ = require('./DB_con');
 const SEQUELIZE = require('sequelize');
 
 const Post = SEQ.define('Post',{
