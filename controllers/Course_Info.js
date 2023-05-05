@@ -21,9 +21,11 @@ exports.POSTmaincategory = (req, res, next) => {
     })
     .then(result => {
         console.log(result);
+        result = req.maincatID ;
         res.status(201).json({
             massage : 'success'
          });
+         
     })
     .catch(err => {
         console.error(err);
@@ -32,7 +34,7 @@ exports.POSTmaincategory = (req, res, next) => {
 
 exports.GetmaincategoryID = (req,res, next) => {
     const mainCatid = req.body.catid ;
-    mainCatid = req.query.mainid ;
+    
     mainproduct.maincat.findOne(
         {
             where :{
@@ -59,7 +61,6 @@ exports.POSTsubcategory = (req, res, next) => {
         SubCat_Name : subcatname
     }).then(result => {
         console.log(result);
-        console.log(req.query.mainid) ;
         res.status(201).json({
             massage : 'success'
         })

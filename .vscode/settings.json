@@ -1,9 +1,12 @@
 {
     "cSpell.words": [
         "abdo",
+        "aboutme",
         "contacttype",
         "currentpage",
+        "firstname",
         "gethome",
+        "lastname",
         "maincat",
         "mainproduct",
         "mainuserdata",
@@ -11,6 +14,7 @@
         "poda",
         "posthome",
         "subcat",
+        "usertype",
         "uuidv"
     ]
 }

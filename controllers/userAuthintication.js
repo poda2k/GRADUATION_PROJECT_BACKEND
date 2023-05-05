@@ -1,8 +1,12 @@
 const user = require('../DataBase/mainuserdata');
+const Analysis = require('../DataBase/Analysis');
+const mainproduct = require('../DataBase/mainproduct');
 const bcrypt = require('bcryptjs');
 const SEQ = require('sequelize');
 const JWT = require('jsonwebtoken') ;
-
+let TEMP_id ;
+let cust_id;
+let subcat_id;
 exports.postsignup_customer = (req , res , next) => {
     const username = "test only" ;
     const password = req.body.password ;
@@ -17,18 +21,20 @@ exports.postsignup_customer = (req , res , next) => {
     const City = req.body.City ;
     const Mobile_Number_One = req.body.Mobile_Number_One ;
     const Flag = req.body.Flag;
+    const intersets_array = req.body.interests ;
     let studentFlag ;
     let employeeFlage ;
-    let TEMP_id ;
-
+    
     user.user.findOne({
         where: {
                 Email_Login: email ,
         }
     }).then(result => {
         if(result) {
+            
             res.json({
-                massage : "username or email already exists "
+                massage : "username or email already exists ",
+                token : "unauthurized token"
             }) ;
         }else if(!result){
             bcrypt.hash(password, 12);
@@ -44,7 +50,16 @@ exports.postsignup_customer = (req , res , next) => {
                 user_type : usertype
             }).then(result =>{
                 TEMP_id = result.id ;
-                res.json({massage: " field created successfully " });
+                const token =  JWT.sign({
+                    email : result.email ,
+                    password : result.password,
+                    userId : result.id ,
+                    role : result.usertype
+                }, 'supersecretKEY',{expiresIn :'1h'})
+                res.json({
+                    massage : "signedup  successfully" ,
+                    token : token
+                });
             }).then(result =>{
                 user.wallet.create({
                     Wallet_Amount : 0.0 ,
@@ -54,6 +69,37 @@ exports.postsignup_customer = (req , res , next) => {
                         userId : TEMP_id ,
                         walletId : result.id
                     }).then(result =>{
+                        cust_id = result.id;
+                        for(let i =0 ; i < intersets_array.length ; i++){
+                            mainproduct.subcat.findOne({
+                                where :{
+                                    SubCat_Name : intersets_array[i]
+                                }
+                            }).then(result =>{
+                                Analysis.intrst.create({
+                                    skill_name : intersets_array[i] ,
+                                    subcategoryId : result.id,
+                                    customerId : cust_id                          
+                                }).then(result =>{
+                                    // console.log(subcat_id[i]);
+                                    if(result){
+                                    res.status(201).json({
+                                        massage : "interests posted successfully"
+                                    })
+                                }
+                                })
+                                .catch(err=>{
+                                    console.log(err);
+                                })
+
+                                
+                                console.log(intersets_array);
+                                // subcat_id[i] = result.id ;
+                            }).catch(err =>{
+                                console.log(err);
+                            })
+                              }
+                        
                         res.status(201).json({
                             massage : "user info all set"
                         });
@@ -152,7 +198,6 @@ exports.postsignup_customer = (req , res , next) => {
                    }).catch(error =>{
                     console.log(error);
                    })
-            
             })
             .catch(err =>{
                 console.log(err);
@@ -164,6 +209,36 @@ exports.postsignup_customer = (req , res , next) => {
         console.log(err);
     })
 }
+
+// exports.POSTinterests = (req, res) =>{
+//     const intersets_array = req.body.interests ;
+//     let subcat_id ;
+//         for(let i =0 ; i < intersets_array.length ; i++){
+//         mainproduct.subcat.findOne({
+//             where :{
+//                 SubCat_Name : intersets_array[i]
+//             }
+//         }).then(result =>{
+//             subcat_id = result.id ;
+//         }).catch(err =>{
+//             console.log(err);
+//         })
+//         Analysis.intrst.create({
+//             skill_name : intersets_array[i] ,
+//             customerId : req.cust_id ,
+//             subcategoryId : subcat_id 
+//         }).then(result =>{
+//             if(result){
+//             res.status(201).json({
+//                 massage : "interests posted successfully"
+//             })
+//         }
+//         })
+//         .catch(err=>{
+//             console.log(err);
+//         })}
+    
+// }
 
 exports.POSTlogin = (req, res , next) =>{
     const email = req.body.email ;

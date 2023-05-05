@@ -29,6 +29,29 @@ app.use((req, res, next) => {
 app.use(home);
 app.use(userRoutes);
 
+
+// Admin Account //
+// mainuserdata.user.create({
+//     Username: 'Admin_',
+//     First_Name: 'A nice' ,
+//     Last_Name: 'Person' ,
+//     Email_Login : 'Admin@admin.com',
+//     Password : 'onlyAdmin123',
+//     user_type: 'admin',
+//     Date_of_Birth : 'DATE' ,
+//     Gender: 'male',
+//     About_Me : 'I am the Admin Of this Website',
+     
+// })
+// .then((result)=>{
+//     console.log(result);
+// })
+// .catch((err)=>{
+//     console.log(err);
+// });
+
+
+
 // const FileStorage = multer.diskStorage({
 //     destination: function(req, file, cb) {
 //         cb(null, path.join(__dirname, 'images'));     // giving the destination and null error in the callback
@@ -51,6 +74,8 @@ app.use(userRoutes);
 // }
 
 // app.use(multer({storage:FileStorage , fileFilter: fileFilter}).single('image')) ;
+// Admin Account //
+
 
 user.hasMany(POST);
 POST.belongsTo(user);
