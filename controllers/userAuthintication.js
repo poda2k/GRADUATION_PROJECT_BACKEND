@@ -54,7 +54,7 @@ exports.postsignup_customer = (req , res , next) => {
                     email : result.email ,
                     password : result.password,
                     userId : result.id ,
-                    role : result.usertype
+                    role : result.user_type
                 }, 'supersecretKEY',{expiresIn :'1h'})
                 res.json({
                     massage : "signedup  successfully" ,
@@ -266,7 +266,9 @@ exports.POSTlogin = (req, res , next) =>{
             }
            const token =  JWT.sign({
                 email : logged_user.email ,
-                password : logged_user.password
+                password : logged_user.password ,
+                role : logged_user.user_type,
+                userId : logged_user.id
             }, 'supersecretKEY',{expiresIn :'1h'})
             res.json({
                 massage : "logged in successfully" ,
