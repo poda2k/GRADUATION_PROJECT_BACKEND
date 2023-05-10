@@ -66,12 +66,7 @@ const connec = require('./DB_con');
 
     ,num_student_enrolled:{
         type:Sequelize.INTEGER
-    },
-    Admin_approvement_course:{
-        type: Sequelize.BOOLEAN
-
     }
-    
     });
 
     const cust_course=connec.define('Costomer Course',{

@@ -3,23 +3,11 @@ const connec = require('./DB_con');
 const bcrypt = require('sequelize-bcrypt');
 // user table
 const user = connec.define('user',{
-
-    Username : {
-        type:Sequelize.STRING,
-        allowNull : false,
-       
-    },
-
-    First_Name : {
+    Name : {
         type:Sequelize.STRING,
         allowNull : false,
        
     }, 
-    Last_Name : {
-        type:Sequelize.STRING,
-        allowNull : false,
-       
-    },
     Email_Login : {
         type:Sequelize.STRING,
         allowNull : true,
@@ -177,16 +165,9 @@ const instructor = connec.define('instructor', {
         type : Sequelize.INTEGER,
         allowNull: true
     },
-    Ins_Bio : {
-        type : Sequelize.STRING,
-        allowNull:true
-    },
     Ins_Rate: {
         type: Sequelize.INTEGER,
-        validate :{
-            max:5
-        },
-        allowNull: true,
+        allowNull: true
     },
     Num_of_Total_Rates: {
         type: Sequelize.INTEGER,
@@ -194,9 +175,7 @@ const instructor = connec.define('instructor', {
     },
     Admin_approvement_ins:{
         type: Sequelize.BOOLEAN
-
     }
-
 });
 
 const partner=connec.define('Educational_Partner',{
@@ -214,26 +193,19 @@ const partner=connec.define('Educational_Partner',{
     ,Mobile_one:{
         type:Sequelize.STRING,
         allowNull:false,
-        validate:{
-            is: /^\+?[1-9][0-9]{7,14}$/
-        }  
+        
     }
     ,Mobile_two:{
         type:Sequelize.STRING,
         allowNull:false,
-        validate:{
-            is: /^\+?[1-9][0-9]{7,14}$/
-        }  
+        
     }
     ,fax:{
         type:Sequelize.STRING
     }
     ,Rate:{
         type:Sequelize.INTEGER,
-        validate:{
-            max:5
-        }
-        ,bio:{
+        bio:{
             type:Sequelize.STRING
         }
     }

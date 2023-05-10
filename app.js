@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const home = require('./Routes/main');
 const userRoutes = require('./Routes/user');
+const course = require('./Routes/course_route');
 const database = require('./DataBase/DB_con');
 const user = require('./DataBase/USER');
 const POST = require('./DataBase/Post');
@@ -28,13 +29,13 @@ app.use((req, res, next) => {
 
 app.use(home);
 app.use(userRoutes);
+app.use(course);
 
 
-// Admin Account //
+// Admin Account DON`T DELETE THIS ROW //
 // mainuserdata.user.create({
 //     Username: 'Admin_',
-//     First_Name: 'A nice' ,
-//     Last_Name: 'Person' ,
+//     Name : 'A nice person' ,
 //     Email_Login : 'Admin@admin.com',
 //     Password : 'onlyAdmin123',
 //     user_type: 'admin',
@@ -50,6 +51,7 @@ app.use(userRoutes);
 //     console.log(err);
 // });
 
+// Admin Account //
 
 
 // const FileStorage = multer.diskStorage({
@@ -74,7 +76,7 @@ app.use(userRoutes);
 // }
 
 // app.use(multer({storage:FileStorage , fileFilter: fileFilter}).single('image')) ;
-// Admin Account //
+
 
 
 user.hasMany(POST);
@@ -155,7 +157,7 @@ coursesDetails.lesson.belongsTo(mainuserdata.instructor);
 mainuserdata.partner.hasMany(coursesDetails.course,);
 coursesDetails.course.belongsTo(mainuserdata.partner);
 
-mainuserdata.instructor.hasMany(coursesDetails.course,);
+mainuserdata.instructor.hasMany(coursesDetails.course);
 coursesDetails.course.belongsTo(mainuserdata.instructor);
 
 coursesDetails.course.hasMany(coursesDetails.off_cour);
