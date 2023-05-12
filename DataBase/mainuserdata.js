@@ -19,7 +19,7 @@ const user = connec.define('user',{
 
     },
     Image_Profile : {
-        type:Sequelize.STRING,
+        type:Sequelize.BLOB,
         allowNull : true
     },
     Date_of_Birth : {
@@ -172,6 +172,14 @@ const instructor = connec.define('instructor', {
     Num_of_Total_Rates: {
         type: Sequelize.INTEGER,
         allowNull: true 
+    },
+    Num_of_Student_enrolled: {
+        type: Sequelize.INTEGER ,
+        allowNull: true
+    },
+    specialization : {
+        type: Sequelize.STRING,
+        allowNull: true
     },
     Admin_approvement_ins:{
         type: Sequelize.BOOLEAN

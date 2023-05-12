@@ -1,8 +1,10 @@
 const express = require('express');
 const route = express.Router();
 const userAuth = require('../controllers/userAuthintication');
-const isAuth = require('../middle_ware/is-auth');
 const Admincontroller = require('../controllers/AdminController');
+const course = require('../controllers/course');
+const isAuth = require('../middle_ware/is-auth');
+
 
 route.post('/login', userAuth.POSTlogin);
 route.post('/signup' , userAuth.postsignup_customer);
@@ -16,7 +18,10 @@ route.post('/instructor',userAuth.Postinstructor);
 route.get('/Admin/PendingInstructors',isAuth.Admin,Admincontroller.GETpendingInstructors);  
 route.get('/Admin/ApprovedInstructors',Admincontroller.GETApprovedInstructors);
 route.get('/Admin/Allusers',isAuth.Admin,Admincontroller.GETALLusers);
-
+route.get('/instructor-details/:instructorId' , course.Getinstructorconponent);
+route.get('/allinstructors' , Admincontroller.GETallinstructors );
+route.get('/instructorprofile/:instructorId' , course.Getinstructorprofile) ;
+route.get('/instructors/instructorcomponent/:instructorId' , course.Getinstructorconponent);
 
 //update instructor//
 route.put('/Admin/updateInstructor/:instructorId',isAuth.Admin, Admincontroller.UPDATEinstructorStatus );

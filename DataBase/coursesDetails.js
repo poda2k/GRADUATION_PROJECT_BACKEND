@@ -22,15 +22,18 @@ const connec = require('./DB_con');
     ,course_description:{
         type:Sequelize.STRING,
         allowNull:true
+    },
+    course_summary :{
+        type : Sequelize.STRING, 
+        allowNul : true
     }
-
     ,course_language:{
         type:Sequelize.STRING,
         allowNull:true
     }
 
     ,course_image:{
-        type:Sequelize.STRING,
+        type:Sequelize.BLOB,
         allowNull:true
     }
 

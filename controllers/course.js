@@ -1,6 +1,10 @@
 const course = require('../DataBase/coursesDetails');
 const user = require('../DataBase/mainuserdata');
 
+let instructor_image;
+let lessonarray =[];
+
+
 exports.POSTcourse = (req, res, next) => {
     const course_name  =  req.body.course_name ;
     const course_status = "will be deleted"
@@ -8,7 +12,7 @@ exports.POSTcourse = (req, res, next) => {
     const course_price = req.body.course_price ;
     const course_description = req.body.course_description ;
     const course_language = req.body.course_language ;
-    const course_image = "stopped" ;
+    const course_image = req.file.path.split('\\').join('/');
     const course_rate = 0.0 ;
     const total_hours = req.body.total_hours ;
     const num_sections = req.body.num_sections ;
@@ -21,6 +25,8 @@ exports.POSTcourse = (req, res, next) => {
     const Lesson_Name =req.body.Lesson_Name;
     const Lesson_Type =req.body.Lesson_Type;
     const Lesson_Description =req.body.Lesson_Description;
+    console.log(course_image)
+    const imageUrl = course_image.path;
     user.instructor.findOne({
         where:{
             userId : req.userId
@@ -30,7 +36,7 @@ exports.POSTcourse = (req, res, next) => {
             course.course.create({
                 course_name  : course_name,
                 course_statues : course_status,
-                Instructor_name : result.Name,
+                Instructor_name : Instructor_name,
                 course_price : course_price,
                 course_description: course_description,
                 course_language: course_language,
@@ -84,20 +90,164 @@ exports.POSTcourse = (req, res, next) => {
 
 exports.GETcourse = (req, res) => {
     const id = req.params.courseId ;
+    
+
 
     course.course.findOne({
         where :{
             id : id
         }
-    }).then(result => {
-        if(!result) {
+    }).then(coursecontent => {
+        if(!coursecontent) {
             const err = new Error('no course found');
             throw err;
         }
-        res.json({
+        user.instructor.findOne({
+            where : {
+                id : coursecontent.instructorId 
+            }
+        }).then(result => {
+           
+            user.user.findOne({
+                where:{
+                    id:result.userId
+                }
+            }).then(result =>{
+                instructor_image = result.Image_Profile;
+                course.skillgain.findAll({
+                    where : {
+                        courseId : coursecontent.id
+                    }
+                }).then(result =>{
+                    res.json({ courseHeader : [coursecontent , {image : instructor_image} , {overview : result}] })
+                }).catch(err =>{
+                    console.log(err);
+                })
+                // console.log(instructor_image);
+                // console.log(result.id)
+               
+            })
+              .catch(err => {
+                console.log(err)
+            })
 
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+
+exports.GETallcourses = (req, res) => {
+
+    course.course.findAll().then(result => {
+        const course_name = result.course_name;
+        res.json({courses: result})
+    }).catch(err => {
+        console.log(err)
+    })
+}
+exports.Getinstructorconponent =(req, res) => {
+    const id = req.params.instructorId;
+    user.user.findOne({
+        where : {
+            id : id 
+        }
+    }).then(instructorINFO => {
+      user.contacttype.findOne({
+        where:{
+            userId:instructorINFO.id
+        }
+      }).then(result =>{
+        if(!result) {
+            const err = new Error('no instructor found');
+            throw err;
+        }
+
+        res.json({instructorDetails : [instructorINFO,result]})
+      }).catch(err => {
+        console.log(err);
+      })
+ 
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+exports.Getinstructorprofile = (req,res) => {
+
+    const id = req.params.instructorId ;
+
+    user.user.findOne({
+        where:{
+            id : id 
+        }
+    }).then(userINFO => {
+        user.instructor.findOne({
+            userId : userINFO.id
+        }).then(instructorINFO => {
+            course.course.findAll({
+                instructorId : instructorINFO.id
+            }).then(courseinfo => {
+                if(!courseinfo) {
+                    const err = new Error('no instructor found');
+                    throw err;
+                }
+                res.json({instructorName : [userINFO ,instructorINFO,courseinfo]})
+            }).catch(err => {console.log(err)})
+        }).catch(err => {
+            console.log(err)
         })
     }).catch(err => {
         console.log(err)
     })
+
+}
+
+// TL3 MYTYN ABONA FYHA //
+
+exports.getcoursedeatails =(req,res) => {
+    const id =req.params.courseid;
+   
+   course.sections.findAll({
+    where : {
+        courseId: id
+    }
+   }).then(sectionob => {
+    for(let i = 0 ; i < sectionob.length; i++){
+        course.lesson.findAll({
+            where: {
+                SectionId : sectionob[i].id
+            }
+        }).then(lessonob => {
+            // console.log(sectionob[i])
+            // let temp = sectionob[i].section_name;
+            lessonarray[i] = lessonob  ;
+          
+            // console.log(lessonarray[i]);
+           
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }
+    function waitTIMER(){
+        let count =1 
+        return intervalId = setInterval( ()=>{
+            res.json({sections : lessonarray })
+            if (count === 1) {
+                clearInterval(intervalId);
+              }
+        }, 1000); 
+    
+    }
+    waitTIMER();
+   
+   }).catch(err => {
+    console.log(err)
+})
 }

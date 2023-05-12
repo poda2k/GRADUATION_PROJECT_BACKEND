@@ -317,11 +317,42 @@ exports.GETALLusers = (req, res) => {
             const error = new Error('no users found') ;
             throw error ;
         }
-        // if(result.user_type!='admin'){
-        // let name = result.name ;
-        // let email = result.Email_Login ;
-        // let userType = result.userType ;
+     
         res.json({data : result});
         //   }
     }).catch(err => console.log(err));
+}
+
+exports.GETallinstructors = (req, res) => {
+
+    user.user.findAll({
+        where:{
+            user_type : 'Individual Instructor'
+        }
+    }).then(userINFO => {
+        if(!userINFO){
+            const error = new Error('no users found') ;
+            throw error ;
+        }
+       user.contacttype.findAll({
+        where:{
+            userId : userINFO.id
+        }
+       }).then(contactinfo => {
+        user.instructor.findAll({
+            where:{
+                userId : userINFO.id
+            }
+       }).then( instructorINFO => {
+        if(!instructorINFO){
+            const error = new Error('no users found') ;
+            throw error ;
+        }
+        res.json({instructors :[userINFO,contactinfo,instructorINFO]})
+       }).catch(err => console.log(err))
+        
+       }).catch(err => console.log(err))
+      
+    }).catch(err => console.log(err));
+
 }

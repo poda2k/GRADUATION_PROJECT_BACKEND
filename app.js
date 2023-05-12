@@ -17,6 +17,28 @@ const path = require('path') ;
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
+
+
+const fileFilter = (req , file , cb) => {
+    if(
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' || 
+        file.mimetype === 'image/jpeg'
+    ){
+        cb(null ,true) ;
+    }else {
+        cb(null,false);
+    }
+}
+const FileStorage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'images');     // giving the destination and null error in the callback
+    },
+    filename: function(req, file, cb) {
+        cb(null,'s' +uuidv4() + '-' + file.originalname);
+    }
+});
+app.use(multer({storage:FileStorage , fileFilter:fileFilter}).single('image')) ;
 app.use(bodyParser.json());
 app.use('/',express.static(path.join(__dirname, 'images')));
 app.use((req, res, next) => {
@@ -54,26 +76,9 @@ app.use(course);
 // Admin Account //
 
 
-// const FileStorage = multer.diskStorage({
-//     destination: function(req, file, cb) {
-//         cb(null, path.join(__dirname, 'images'));     // giving the destination and null error in the callback
-//     },
-//     filename: function(req, file, cb) {
-//         cb(null, new Date().toISOString() + '-' + file.originalname);
-//     }
-// });
 
-// const fileFilter = (req , file , cb) => {
-//     if(
-//         file.mimetype === 'image/png' ||
-//         file.mimetype === 'image/jpg' || 
-//         file.mimetype === 'image/jpeg'
-//     ){
-//         cb(null ,true) ;
-//     }else {
-//         cb(null,false);
-//     }
-// }
+
+
 
 // app.use(multer({storage:FileStorage , fileFilter: fileFilter}).single('image')) ;
 
