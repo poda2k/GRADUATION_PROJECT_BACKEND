@@ -210,44 +210,70 @@ exports.Getinstructorprofile = (req,res) => {
 
 // TL3 MYTYN ABONA FYHA //
 
-exports.getcoursedeatails =(req,res) => {
-    const id =req.params.courseid;
+// exports.getcoursedeatails =(req,res) => {
+//     const id =req.params.courseid;
    
-   course.sections.findAll({
-    where : {
-        courseId: id
-    }
-   }).then(sectionob => {
-    for(let i = 0 ; i < sectionob.length; i++){
-        course.lesson.findAll({
-            where: {
-                SectionId : sectionob[i].id
-            }
-        }).then(lessonob => {
-            // console.log(sectionob[i])
-            // let temp = sectionob[i].section_name;
-            lessonarray[i] = lessonob  ;
+//    course.sections.findAll({
+//     where : {
+//         courseId: id
+//     }
+//    }).then(sectionob => {
+//     for(let i = 0 ; i < sectionob.length; i++){
+//         course.lesson.findAll({
+//             where: {
+//                 SectionId : sectionob[i].id
+//             }
+//         }).then(lessonob => {
+//             // console.log(sectionob[i])
+//             // let temp = sectionob[i].section_name;
+//             lessonarray[i] = lessonob  ;
           
-            // console.log(lessonarray[i]);
+//             // console.log(lessonarray[i]);
            
-        }).catch(err => {
-            console.log(err)
-        })
+//         }).catch(err => {
+//             console.log(err)
+//         })
 
-    }
-    function waitTIMER(){
-        let count =1 
-        return intervalId = setInterval( ()=>{
-            res.json({sections : lessonarray })
-            if (count === 1) {
-                clearInterval(intervalId);
-              }
-        }, 1000); 
+//     }
+//     function waitTIMER(){
+//         let count =1 
+//         return intervalId = setInterval( ()=>{
+//             res.json({sections : lessonarray })
+//             if (count === 1) {
+//                 clearInterval(intervalId);
+//               }
+//         }, 1000); 
     
-    }
-    waitTIMER();
+//     }
+//     waitTIMER();
    
-   }).catch(err => {
-    console.log(err)
-})
-}
+//    }).catch(err => {
+//     console.log(err)
+// })
+// }
+
+exports.singlecoursepage = async (req, res) => {
+    const id =req.params.courseid;
+    const Lessons = course.lesson;
+    try {
+      const sections = await course.sections.findAll({
+        where:{
+            courseId: id
+        },
+        include: [Lessons]
+      });
+    //   console.log(sections)
+    //   const result = sections.map((section) => {
+    //     const { id, section_name, section_lesson } = section;
+    //     const lessons = section_lesson.map((lesson) => {
+    //       const { id, lesson_name, lesson_description } = lesson;
+    //       return { id, lesson_name, lesson_description };
+    //     });
+    //     return { id, section_name, lessons };
+    //   });
+    //   console.log(result)
+      res.status(200).json(sections);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
