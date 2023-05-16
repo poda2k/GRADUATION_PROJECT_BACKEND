@@ -12,6 +12,7 @@ route.post('/signup' , userAuth.postsignup_customer);
 route.post('/contact_type' , isAuth.userAuth ,userAuth.postconact_type);
 route.post('/work_experience' ,isAuth.userAuth, userAuth.postwork_Experience);
 route.post('/instructor',userAuth.Postinstructor);
+route.post('/create/educationalpartner' , isAuth.Admin , Admincontroller.POSTeducationpartner);
 
 
 //  GET USER DATA //
@@ -20,8 +21,8 @@ route.get('/Admin/ApprovedInstructors',Admincontroller.GETApprovedInstructors);
 route.get('/Admin/Allusers',isAuth.Admin,Admincontroller.GETALLusers);
 route.get('/instructor-details/:instructorId' , course.Getinstructorconponent);
 route.get('/allinstructors' , Admincontroller.GETallinstructors );
-route.get('/instructorprofile/:instructorId' , course.Getinstructorprofile) ;
-route.get('/instructors/instructorcomponent/:instructorId' , course.Getinstructorconponent);
+route.get('/instructorprofile/:userId' , course.Getinstructorprofile) ;
+route.get('/instructors/instructorcomponent/:userId' , course.Getinstructorconponent);
 
 //update instructor//
 route.put('/Admin/updateInstructor/:instructorId',isAuth.Admin, Admincontroller.UPDATEinstructorStatus );

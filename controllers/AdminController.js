@@ -1,5 +1,5 @@
 const user = require('../DataBase/mainuserdata');
-
+const bcrypt = require('bcryptjs');
 
 exports.GETpendingInstructors = (req, res, next) =>{
 

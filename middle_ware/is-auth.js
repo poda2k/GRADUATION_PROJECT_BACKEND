@@ -63,7 +63,7 @@ exports.checkforpartners = (req, res, next) => {
         req.userId = decodedToken.userId;
         req.userType = decodedToken.role;
         req.userNAME = decodedToken.userName;
-        if(req.userType==='Individual Instructor' || req.userType==='educational_partner'){
+        if(req.userType==='Individual Instructor' || req.userType==='Education partner'){
             next();
         }else{
             const err = new Error('invalid token') ;

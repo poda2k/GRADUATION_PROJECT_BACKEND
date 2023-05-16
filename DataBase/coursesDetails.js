@@ -33,7 +33,7 @@ const connec = require('./DB_con');
     }
 
     ,course_image:{
-        type:Sequelize.BLOB,
+        type:Sequelize.STRING,
         allowNull:true
     }
 

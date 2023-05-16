@@ -140,6 +140,58 @@ exports.GETcourse = (req, res) => {
     })
 }
 
+exports.GETcourseSidebarcard = (req, res) => {
+    const id = req.params.courseId ;
+    
+
+
+    course.course.findOne({
+        where :{
+            id : id
+        }
+    }).then(coursecontent => {
+        if(!coursecontent) {
+            const err = new Error('no course found');
+            throw err;
+        }
+        user.instructor.findOne({
+            where : {
+                id : coursecontent.instructorId 
+            }
+        }).then(result => {
+           
+            user.user.findOne({
+                where:{
+                    id:result.userId
+                }
+            }).then(result =>{
+                instructor_image = result.Image_Profile;
+                course.skillgain.findAll({
+                    where : {
+                        courseId : coursecontent.id
+                    }
+                }).then(result =>{
+                    res.json({ 	courseSideBarCard  : [coursecontent , {image : instructor_image} , {overview : result}] })
+                }).catch(err =>{
+                    console.log(err);
+                })
+                // console.log(instructor_image);
+                // console.log(result.id)
+               
+            })
+              .catch(err => {
+                console.log(err)
+            })
+
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
 
 exports.GETallcourses = (req, res) => {
 
@@ -151,7 +203,7 @@ exports.GETallcourses = (req, res) => {
     })
 }
 exports.Getinstructorconponent =(req, res) => {
-    const id = req.params.instructorId;
+    const id = req.params.userId;
     user.user.findOne({
         where : {
             id : id 
@@ -167,7 +219,7 @@ exports.Getinstructorconponent =(req, res) => {
             throw err;
         }
 
-        res.json({instructorDetails : [instructorINFO,result]})
+        res.json({instructorDetails  : [instructorINFO,result]})
       }).catch(err => {
         console.log(err);
       })
@@ -180,7 +232,7 @@ exports.Getinstructorconponent =(req, res) => {
 
 exports.Getinstructorprofile = (req,res) => {
 
-    const id = req.params.instructorId ;
+    const id = req.params.userId ;
 
     user.user.findOne({
         where:{
