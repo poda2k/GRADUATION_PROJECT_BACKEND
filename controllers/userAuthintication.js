@@ -58,7 +58,9 @@ exports.postsignup_customer = (req, res, next) => {
                 res.json({
                     massage: "signedup successfully",
                     token: token ,
-                    role : result.user_type
+                    role : result.user_type,
+                    userID : result.id,
+                    
                 });
             }).then(result => {
                 user.wallet.create({
