@@ -6,7 +6,7 @@ const user = connec.define('user',{
     Name : {
         type:Sequelize.STRING,
         allowNull : false,
-       
+
     }, 
     Email_Login : {
         type:Sequelize.STRING,

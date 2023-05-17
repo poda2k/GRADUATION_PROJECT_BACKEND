@@ -56,8 +56,9 @@ exports.postsignup_customer = (req, res, next) => {
                     userName: result.name
                 }, 'supersecretKEY', { expiresIn: '1h' })
                 res.json({
-                    massage: "signedup  successfully",
-                    token: token
+                    massage: "signedup successfully",
+                    token: token ,
+                    role : result.user_type
                 });
             }).then(result => {
                 user.wallet.create({
@@ -82,9 +83,7 @@ exports.postsignup_customer = (req, res, next) => {
                                 }).then(result => {
                                     // console.log(subcat_id[i]);
                                     if (result) {
-                                        res.status(201).json({
-                                            massage: "interests posted successfully"
-                                        })
+                                      console.log('interests posted successfully')
                                     }
                                 })
                                     .catch(err => {

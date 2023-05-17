@@ -142,9 +142,6 @@ exports.GETcourse = (req, res) => {
 
 exports.GETcourseSidebarcard = (req, res) => {
     const id = req.params.courseId ;
-    
-
-
     course.course.findOne({
         where :{
             id : id

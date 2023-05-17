@@ -1,202 +1,202 @@
 const user = require('../DataBase/mainuserdata');
 const bcrypt = require('bcryptjs');
 
-exports.GETpendingInstructors = (req, res, next) =>{
+exports.GETpendingInstructors = (req, res, next) => {
 
     user.instructor.findAll({
         where: {
-            Admin_approvement_ins : false
+            Admin_approvement_ins: false
         }
-    }).then(result =>{
-        if(!result){
-            const error = new Error('no instructors fetched') ;
-            throw error ;
+    }).then(result => {
+        if (!result) {
+            const error = new Error('no instructors fetched');
+            throw error;
         }
-        res.status(200).json({data: result});
-    }).catch(err =>{
+        res.status(200).json({ data: result });
+    }).catch(err => {
         console.log(err);
     })
 }
-exports.GETApprovedInstructors = (req, res, next) =>{
+exports.GETApprovedInstructors = (req, res, next) => {
 
     user.instructor.findAll({
         where: {
-            Admin_approvement_ins : true
+            Admin_approvement_ins: true
         }
-    }).then(result =>{
-        if(!result){
-            const error = new Error('no instructors fetched') ;
-            throw error ;
+    }).then(result => {
+        if (!result) {
+            const error = new Error('no instructors fetched');
+            throw error;
         }
         res.status(200).json({
-            data : result
+            data: result
         })
-    }).catch(err =>{
+    }).catch(err => {
         console.log(err);
     })
 }
 
-exports.UPDATEinstructorStatus = (req, res , next)=>{
-    const Approved = req.body.Approved ;
-    const id = req.params.instructorId; 
-    if(Approved==true) {
+exports.UPDATEinstructorStatus = (req, res, next) => {
+    const Approved = req.body.Approved;
+    const id = req.params.instructorId;
+    if (Approved == true) {
         user.wallet.create({
-            Wallet_Amount : 0.0
-        }).then(result=>{
+            Wallet_Amount: 0.0
+        }).then(result => {
             user.instructor.update({
-                Admin_approvement_ins : Approved ,
-                walletId : result.id
-            },{
-                where:{
-                    id : id
+                Admin_approvement_ins: Approved,
+                walletId: result.id
+            }, {
+                where: {
+                    id: id
                 }
             }
-            ).then(result =>{
-                if(!result){
-                    const error = new Error('update instructor status failed') ;
-                    throw error ;
+            ).then(result => {
+                if (!result) {
+                    const error = new Error('update instructor status failed');
+                    throw error;
                 }
                 res.json({
-                    massage:'status updated'
+                    massage: 'status updated'
                 });
-            }).catch(err =>{
+            }).catch(err => {
                 console.log(err);
             })
-        }).catch(err=>{
+        }).catch(err => {
             console.log(err);
         })
     }
-   
+
 }
 
-exports.DELETEinstructor = (req,res,next)=>{
+exports.DELETEinstructor = (req, res, next) => {
     const id = req.params.instructorId;
     user.instructor.findOne({
-        where:{
+        where: {
             id: id
         }
-    }).then(result=>{
+    }).then(result => {
         // let TEMP_id = result.id
         user.instructor.destroy({
-            where:{
-                id : id
+            where: {
+                id: id
             }
-        }).then(result =>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-          console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.user.destroy({
-            where : {
-                id : result.userId
+            where: {
+                id: result.userId
             }
-        }).then(result=>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-            console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.WorkExperience.destroy({
             where: {
-                userId :result.userId
+                userId: result.userId
             }
-        }).then(result=>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-            console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
-      user.contacttype.destroy({
-        where: {
-            userId :result.userId
-        }
-      }).then(result=>{
-        if(!result){
-            const error = new Error('error in deleting instructor');
-            throw error;
-        }
-        res.json({
-            massage : 'instructor deleted successfully'
-        });
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        user.contacttype.destroy({
+            where: {
+                userId: result.userId
+            }
+        }).then(result => {
+            if (!result) {
+                const error = new Error('error in deleting instructor');
+                throw error;
+            }
+            res.json({
+                massage: 'instructor deleted successfully'
+            });
+        }).catch(err => console.log(err));
+
     }).catch(err => console.log(err));
-    
-    }).catch(err => console.log(err));
-   
+
 }
 
 
 
-exports.DELETECustomer = (req,res,next)=>{
+exports.DELETECustomer = (req, res, next) => {
     const id = req.params.customerId;
-    
+
     user.customer.findOne({
-        where :{
-            id : id
+        where: {
+            id: id
         }
     }).then(result => {
         user.customer.destroy({
-            where:{
-                id : id
+            where: {
+                id: id
             }
-        }).then(result =>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-            console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.user.destroy({
-            where : {
-                userId : result.id
+            where: {
+                userId: result.id
             }
-        }).then(result=>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-            console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.WorkExperience.destroy({
             where: {
-                userId : result.id
+                userId: result.id
             }
-        }).then(result=>{
-            if(!result){
+        }).then(result => {
+            if (!result) {
                 const error = new Error('error in deleting instructor');
                 throw error;
             }
-            console.log("instructor deleted") ;
+            console.log("instructor deleted");
         }).catch(err => console.log(err));
-    // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
-      user.contacttype.destroy({
-        where: {
-            userId : result.id 
-        }
-      }).then(result=>{
-        if(!result){
-            const error = new Error('error in deleting instructor');
-            throw error;
-        }
-        res.json({
-            massage : 'instructor deleted successfully'
-        });
-    }).catch(err => console.log(err));
-    
+        // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
+        user.contacttype.destroy({
+            where: {
+                userId: result.id
+            }
+        }).then(result => {
+            if (!result) {
+                const error = new Error('error in deleting instructor');
+                throw error;
+            }
+            res.json({
+                massage: 'instructor deleted successfully'
+            });
+        }).catch(err => console.log(err));
+
     }).catch(err => {
         console.log(err);
     })
 
 }
-exports.POSTeducationpartner = (req,res,next)=>{
+exports.POSTeducationpartner = (req, res, next) => {
     const Name = req.body.Name;
     const Email = req.body.Email;
     const password = req.body.password;
@@ -212,12 +212,12 @@ exports.POSTeducationpartner = (req,res,next)=>{
     const Twitter_URL = req.body.Twitter_URL;
     const Gethub_URL = req.body.Gethub_URL;
     const LinkedIn_Link = req.body.LinkedIn_Link;
-    const edu_Name =req.body.edu_Name;
-    const edu_Phone =req.body.edu_Phone;
-    const edu_Mobile_one =req.body.edu_Mobile_one;
-    const edu_Mobile_two =req.body.edu_Mobile_two;
-    const edu_fax =req.body.edu_fax;
-    let Temp_id1 ;
+    const edu_Name = req.body.edu_Name;
+    const edu_Phone = req.body.edu_Phone;
+    const edu_Mobile_one = req.body.edu_Mobile_one;
+    const edu_Mobile_two = req.body.edu_Mobile_two;
+    const edu_fax = req.body.edu_fax;
+    let Temp_id1;
     user.user.findOne({
         where: {
             Email_Login: Email,
@@ -273,86 +273,92 @@ exports.POSTeducationpartner = (req,res,next)=>{
                             throw error;
                         }
                         console.log("successful");
-                    }).catch(error=> console.log(error));
+                    }).catch(error => console.log(error));
                     // .catch(err => console.log(err));
                     res.json({
                         massage: "signedup successfully",
                     });
-                }).catch(error=> console.log(error));
+                }).catch(error => console.log(error));
             }).then(result => {
                 user.wallet.create({
                     Wallet_Amount: 0.0
-                }).catch(error=> console.log(error));
-            }).then(result =>{
+                }).catch(error => console.log(error));
+            }).then(result => {
                 user.partner.create({
-                    userId:TEMP_id1 ,
+                    userId: TEMP_id1,
                     Name: edu_Name,
                     Phone: edu_Phone,
-                    Mobile_one : edu_Mobile_one,
-                    Mobile_two : edu_Mobile_two,
-                    fax: edu_fax ,
-                    walletId : result.id
-                }).then(result =>{
-                  if(!result){
-                    const error = new Error('error in creating educational partner');
-                    throw error;
-                  }
-                  console.log("creating educational partner success") ;
+                    Mobile_one: edu_Mobile_one,
+                    Mobile_two: edu_Mobile_two,
+                    fax: edu_fax,
+                    walletId: result.id
+                }).then(result => {
+                    if (!result) {
+                        const error = new Error('error in creating educational partner');
+                        throw error;
+                    }
+                    console.log("creating educational partner success");
                 }).catch(err => console.log(err));
-            }).catch(error=> console.log(error));
+            }).catch(error => console.log(error));
         }
     }).catch(err => console.log(err));
- 
+
 }
 
 exports.GETALLusers = (req, res) => {
 
     user.user.findAll({
-        where:{
-            user_type : 'student'
+        where: {
+            user_type: 'student'
         }
     })
-    .then(result => {
-        if(!result){
-            const error = new Error('no users found') ;
-            throw error ;
-        }
-     
-        res.json({data : result});
-        //   }
-    }).catch(err => console.log(err));
+        .then(result => {
+            if (!result) {
+                const error = new Error('no users found');
+                throw error;
+            }
+
+            res.json({ data: result });
+            //   }
+        }).catch(err => console.log(err));
 }
 
 exports.GETallinstructors = (req, res) => {
 
     user.user.findAll({
-        where:{
-            user_type : 'Individual Instructor'
+        where: {
+            user_type: 'Individual Instructor'
         }
     }).then(userINFO => {
-        if(!userINFO){
-            const error = new Error('no users found') ;
-            throw error ;
-        }
-       user.contacttype.findAll({
-        where:{
-            userId : userINFO.id
-        }
-       }).then(contactinfo => {
-        user.instructor.findAll({
-            where:{
-                userId : userINFO.id
+        // if(!userINFO){
+        //     const error = new Error('no users found') ;
+        //     error.statusCode = 422 ;
+        //     throw error ;
+        // }
+        // let temp 
+        // temp = userINFO.Email_Login
+
+        user.contacttype.findAll({
+            where: {
+                userId: userINFO[0].id
             }
-       }).then( instructorINFO => {
-        if(!instructorINFO){
-            const error = new Error('no users found') ;
-            throw error ;
-        }
-        res.json({instructors :[userINFO,contactinfo,instructorINFO]})
-       }).catch(err => console.log(err))
-        
-       }).catch(err => console.log(err))
-      
+        }).then(contactinfo => {
+
+            user.instructor.findAll({
+                where: {
+                    userId: userINFO[0].id
+                }
+            }).then(instructorINFO => {
+                if (!instructorINFO) {
+                    const error = new Error('no users found');
+                    throw error;
+                }
+
+                res.json({ instructors: [userINFO, contactinfo, instructorINFO] })
+            }).catch(err => console.log("errrroorrr"))
+
+        }).catch(err => console.log("error 2"))
+
     }).catch(err => console.log(err));
 
 }
