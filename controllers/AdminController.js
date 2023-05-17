@@ -325,39 +325,15 @@ exports.GETALLusers = (req, res) => {
 
 exports.GETallinstructors = (req, res) => {
 
+    const instructor = user.instructor 
+    const contact_type = user.contacttype
     user.user.findAll({
         where: {
             user_type: 'Individual Instructor'
-        }
+        } ,
+        include : [contact_type ,instructor ]
     }).then(userINFO => {
-        // if(!userINFO){
-        //     const error = new Error('no users found') ;
-        //     error.statusCode = 422 ;
-        //     throw error ;
-        // }
-        // let temp 
-        // temp = userINFO.Email_Login
-
-        user.contacttype.findAll({
-            where: {
-                userId: userINFO[0].id
-            }
-        }).then(contactinfo => {
-
-            user.instructor.findAll({
-                where: {
-                    userId: userINFO[0].id
-                }
-            }).then(instructorINFO => {
-                if (!instructorINFO) {
-                    const error = new Error('no users found');
-                    throw error;
-                }
-
-                res.json({ instructors: [userINFO, contactinfo, instructorINFO] })
-            }).catch(err => console.log("errrroorrr"))
-
-        }).catch(err => console.log("error 2"))
+        res.json({ instructor :userINFO })
 
     }).catch(err => console.log(err));
 
