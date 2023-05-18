@@ -13,6 +13,8 @@ num_courses:{
 }   
 });
 
+const course_cart = connec.define('course_cart',{});
+
 const search_his =connec.define('search history',{
 search_content:{
         type:Sequelize.STRING,
@@ -34,5 +36,6 @@ module.exports={
     wishlist,
     crt,
     search_his,
-    intrst
+    intrst ,
+    course_cart
 }

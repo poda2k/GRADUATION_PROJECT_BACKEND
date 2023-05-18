@@ -274,7 +274,10 @@ exports.POSTlogin = (req, res, next) => {
                 }, 'supersecretKEY', { expiresIn: '1h' })
                 res.json({
                     massage: "logged in successfully",
-                    token: token
+                    token: token ,
+                    role: result.user_type,
+                    userId: result.id,
+                    userName: result.name
                 })
             })
             .catch(err => {
@@ -368,19 +371,20 @@ exports.Postinstructor = (req, res, next) => {
     const Name = req.body.Name;
     const Email = req.body.Email;
     const password = req.body.password;
-    const DOB = req.body.DOB;
+    // const DOB = req.body.DOB;
     const gender = req.body.gender;
     const aboutme = req.body.aboutme;
     const usertype = "Individual Instructor";
     const Country = req.body.country;
     const City = req.body.City;
+    const image = req.file.path.split('\\').join('/');
     const Mobile_Number_One = req.body.Mobile_Number_One;
     const Facebook_URL = req.body.Facebook_URL;
     const Gmail_Email = req.body.Gmail_Email;
     const Twitter_URL = req.body.Twitter_URL;
     const Gethub_URL = req.body.Gethub_URL;
     const LinkedIn_Link = req.body.LinkedIn_Link;
-    let Temp_id1 ;
+    const speciality = req.body.speciality;
     user.user.findOne({
         where: {
             Email_Login: Email,
@@ -399,6 +403,7 @@ exports.Postinstructor = (req, res, next) => {
                 Name: Name,
                 Gender: gender,
                 About_Me: aboutme,
+                Image_Profile : image ,
                 user_type: usertype
             }).then(result => {
                 TEMP_id1 = result.id;
@@ -448,6 +453,7 @@ exports.Postinstructor = (req, res, next) => {
                     Total_Courses_tech : 0 ,
                     Ins_Rate : 0,
                     Num_of_Total_Rates: 0 ,
+                    specialization : speciality,
                     Admin_approvement_ins: false 
                 }).then(result =>{
                   

@@ -1,5 +1,7 @@
 const course = require('../DataBase/coursesDetails');
 const user = require('../DataBase/mainuserdata');
+const cart = require('../DataBase/Analysis') ;
+
 
 let instructor_image;
 let lessonarray =[];
@@ -326,3 +328,35 @@ exports.singlecoursepage = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+exports.postADDCart = (req, res, next) => {
+    const courseID = req.params.courseID;
+    let num_courses 
+    user.customer.findOne({
+        where: {
+            userId : req.userId
+        }
+    }).then(customer => {
+        cart.crt.findOne({
+            where : {
+                customerId : customer.id
+            }
+        }).then(cartINFO => {
+            if(!cartINFO){
+
+            }
+            cart.crt.create({
+                num_courses : 0 ,
+                customerId : customer.id
+            }).then(cart_course => {
+                // cart.course_cart.
+            }).catch(err => {
+                console.log("error in create cart", err);
+            })
+        }).catch(err => {
+            console.log("error in cart")
+        })
+    }).catch(err => {
+        console.log(err);
+    })
+}

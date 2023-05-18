@@ -11,7 +11,7 @@ route.post('/signup' , userAuth.postsignup_customer);
 // route.post('/signup/interests' , userAuth.POSTinterests);
 route.post('/contact_type' , isAuth.userAuth ,userAuth.postconact_type);
 route.post('/work_experience' ,isAuth.userAuth, userAuth.postwork_Experience);
-route.post('/instructor',userAuth.Postinstructor);
+route.post('/register/instructor',userAuth.Postinstructor);
 route.post('/create/educationalpartner' , isAuth.Admin , Admincontroller.POSTeducationpartner);
 
 

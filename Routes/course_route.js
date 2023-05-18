@@ -3,10 +3,18 @@ const router = express.Router();
 const Auth = require('../middle_ware/is-auth');
 const course = require('../controllers/course');
 
+// GET //
 router.get('/course/:courseId',course.GETcourse);
 router.get('/courses',course.GETallcourses);
 router.get('/getsinglecourse/:courseid',course.singlecoursepage);
 router.get('/courseSidebar' , course.GETcourseSidebarcard);
+// GET //
+
+
+//  POST //
+router.post('/courses/ADDtoCart' , Auth.userAuth , course.postADDCart);
 router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
+
+//  POST //
 
 module.exports = router;
