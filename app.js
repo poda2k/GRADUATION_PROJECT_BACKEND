@@ -17,12 +17,12 @@ const path = require( 'path' );
 const multer = require( 'multer' );
 const { v4: uuidv4 } = require( 'uuid' );
 
-const cors = require( 'cors' );
-app.use( cors( {
-    origin: [ 'http://localhost:8080', 'http://localhost:4000' ],
-    credentials: true,
-    optionSuccessStatus: 200
-} ) );
+// const cors = require( 'cors' );
+// app.use( cors( {
+//     origin: [ 'http://localhost:8080', 'http://localhost:4000' ],
+//     credentials: true,
+//     optionSuccessStatus: 200
+// } ) );
 
 
 const fileFilter = ( req, file, cb ) => {
@@ -47,12 +47,13 @@ const FileStorage = multer.diskStorage( {
 app.use( multer( { storage: FileStorage, fileFilter: fileFilter } ).single( 'image' ) );
 app.use( bodyParser.json() );
 app.use( '/', express.static( path.join( __dirname, 'images' ) ) );
-// app.use( ( req, res, next ) => {
-//     res.setHeader( 'Access-Control-Allow-Origin', '*' );
-//     res.setHeader( 'Access-Control-Allow-Methods', 'GET , POST, PUT, DELETE, OPTIONS ,PATCH' );
-//     res.setHeader( 'Access-Control-Allow-Headers', 'Content-Type, Authorization' );
-//     next();
-// } )
+
+app.use( ( req, res, next ) => {
+    res.setHeader( 'Access-Control-Allow-Origin', '*' );
+    res.setHeader( 'Access-Control-Allow-Methods', 'GET , POST, PUT, DELETE, OPTIONS ,PATCH' );
+    res.setHeader( 'Access-Control-Allow-Headers', 'Content-Type, Authorization' );
+    next();
+} )
 
 
 app.use( home );
@@ -61,23 +62,21 @@ app.use( course );
 
 
 // Admin Account DON`T DELETE THIS ROW //
-// mainuserdata.user.create({
-//     Username: 'Admin_',
-//     Name : 'A nice person' ,
-//     Email_Login : 'Admin@admin.com',
-//     Password : 'onlyAdmin123',
-//     user_type: 'admin',
-//     Date_of_Birth : 'DATE' ,
-//     Gender: 'male',
-//     About_Me : 'I am the Admin Of this Website',
+mainuserdata.user.create({
+    Name : 'A nice person' ,
+    Email_Login : 'Admin@admin.com',
+    Password : 'onlyAdmin123',
+    user_type: 'admin',
+    Gender: 'male',
+    About_Me : 'I am the Admin Of this Website',
 
-// })
-// .then((result)=>{
-//     console.log(result);
-// })
-// .catch((err)=>{
-//     console.log(err);
-// });
+})
+.then((result)=>{
+    console.log(result);
+})
+.catch((err)=>{
+    console.log(err);
+});
 
 // Admin Account //
 
