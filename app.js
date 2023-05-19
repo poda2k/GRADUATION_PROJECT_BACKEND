@@ -240,7 +240,7 @@ payment.payment.belongsTo( mainuserdata.customer );
 database.sync()
     .then( ( result ) => {
         app.listen( 4000 );
-        console.log( 'ok' )
+        console.log( 'all set' )
     } )
     .catch( err => {
         console.error( err );

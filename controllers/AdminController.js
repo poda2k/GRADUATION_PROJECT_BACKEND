@@ -12,7 +12,7 @@ exports.GETpendingInstructors = (req, res, next) => {
             const error = new Error('no instructors fetched');
             throw error;
         }
-        res.status(200).json({ data: result });
+        res.status(200).json({ instructorRequests: result });
     }).catch(err => {
         console.log(err);
     })
@@ -36,9 +36,16 @@ exports.GETApprovedInstructors = (req, res, next) => {
     })
 }
 
-exports.UPDATEinstructorStatus = (req, res, next) => {
+exports.UPDATEinstructorStatus = async(req, res, next) => {
     const Approved = req.body.Approved;
     const id = req.params.instructorId;
+
+    const userinfo = await user.instructor.findOne({
+        where : {
+            id : id
+        }
+    })
+
     if (Approved == true) {
         user.wallet.create({
             Wallet_Amount: 0.0
@@ -56,12 +63,23 @@ exports.UPDATEinstructorStatus = (req, res, next) => {
                     const error = new Error('update instructor status failed');
                     throw error;
                 }
-                res.json({
-                    massage: 'status updated'
-                });
+               
             }).catch(err => {
                 console.log(err);
             })
+        }).then( result2=> {
+            user.user.update({
+                user_type : "Individual Instructor"
+            },{
+                where : {
+                    id : userinfo.userId
+                }
+            }).then( result3=> {
+                console.log("status updated");
+                res.json({
+                    massage: 'status updated'
+                });
+            }).catch( err => {console.log(err);})
         }).catch(err => {
             console.log(err);
         })
@@ -203,7 +221,7 @@ exports.POSTeducationpartner = (req, res, next) => {
     const DOB = req.body.DOB;
     const gender = req.body.gender;
     const aboutme = req.body.aboutme;
-    const usertype = "Education partner ";
+    const usertype = "pending Education partner ";
     const Country = req.body.country;
     const City = req.body.City;
     const Mobile_Number_One = req.body.Mobile_Number_One;

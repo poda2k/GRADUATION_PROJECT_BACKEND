@@ -337,17 +337,19 @@ exports.postADDCart = (req, res, next) => {
     }).then(customer => {
         cart.crt.findOne({
             where : {
-                customerId : customer.id
+                customerId : customer.id ,
+                purchased : false
             }
         }).then(cartINFO => {
             if(!cartINFO){
                 cart.crt.create({
-                    num_courses : 0 ,
-                    customerId : customer.id
+                    num_courses : 1 ,
+                    customerId : customer.id ,
+                    purchased : false
                 }).then(newcart => {
                     cart.course_cart.create({
                         courseId : courseID ,
-                        cartId : cartINFO.id
+                        cartId : newcart.id
                     }).then(cart_course_=>{
                         console.log("first cart created for new customer")
                         res.json({massage : "created new cart for new user"})
@@ -362,7 +364,8 @@ exports.postADDCart = (req, res, next) => {
                 num_courses : num_courses
             },{
                 where: {
-                    customerId : customer.id
+                    customerId : customer.id ,
+                    purchased : false
                 }
             }
             ).then(CRT => {

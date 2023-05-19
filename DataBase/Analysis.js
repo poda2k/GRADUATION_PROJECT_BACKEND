@@ -10,7 +10,11 @@ total_courses:{
 const crt =connec.define('cart',{
 num_courses:{
         type:Sequelize.INTEGER,
-}   
+}   ,
+purchased : {
+    type:Sequelize.BOOLEAN,
+    allowNull : false
+}
 });
 
 const course_cart = connec.define('course_cart',{

@@ -71,6 +71,7 @@ exports.postsignup_customer = (req, res, next) => {
                         userId: TEMP_id,
                         walletId: result.id
                     }).then(result => {
+                        // SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE THIS FUNCTION //
                         cust_id = result.id;
                         for (let i = 0; i < intersets_array.length; i++) {
                             mainproduct.subcat.findOne({
@@ -374,7 +375,7 @@ exports.Postinstructor = (req, res, next) => {
     // const DOB = req.body.DOB;
     const gender = req.body.gender;
     const aboutme = req.body.aboutme;
-    const usertype = "Individual Instructor";
+    const usertype = "pending Individual Instructor";
     const Country = req.body.country;
     const City = req.body.City;
     const image = req.file.path.split('\\').join('/');
