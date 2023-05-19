@@ -99,6 +99,8 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
         })
     }
 
+    else if(Approved === false)
+   { 
     user.user.destroy({
         where : {
             id : id
@@ -108,7 +110,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
         res.json({massage : "instructor rejected"})
     }).catch(err => {console.log(err);})
 
-
+}
 }
 
 exports.DELETEinstructor = (req, res, next) => {
