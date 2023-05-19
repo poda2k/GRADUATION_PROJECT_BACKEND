@@ -356,6 +356,7 @@ exports.postADDCart = (req, res, next) => {
                     console.log("error in create cart", err);
                 })
             }
+
             num_courses = cartINFO.num_courses + 1 ;
             cart.crt.update({
                 num_courses : num_courses
@@ -365,13 +366,22 @@ exports.postADDCart = (req, res, next) => {
                 }
             }
             ).then(CRT => {
-                cart.course_cart.create({
-                    courseId : courseID ,
-                     cartId : cartINFO.id
-                  }).then(cart_course_=>{
-                    console.log("already existed cart updated")
-                    res.json({massage : "done"})
-                  }).catch(err => {console.log("error in create cart_course",err)})
+                cart.course_cart.findOne({
+                    where:{
+                        courseId : courseID 
+                    }
+                  }).then(CRT_COURSE =>{
+                    if(!CRT_COURSE){
+                        cart.course_cart.create({
+                            courseId : courseID  ,
+                            cartId : cartINFO.id
+                        }).then(data =>{
+                            console.log("new course added to cart_course")
+                            res.json({massage : "we done here"})
+                        }).catch(error => console.log(error));
+                    }
+                    console.log("course in cart_course")
+                  }).catch(err => console.log("err"))
                 console.log("num_courses updated")
             }).catch(err => {console.log(err);});
             
