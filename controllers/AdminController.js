@@ -51,7 +51,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
     const Approved = req.body.Approved;
     const id = req.params.userId;
     const instructor = user.instructor
-    const contactType = user.contactType
+    const contactType = user.contacttype
     const WorkExperience = user.WorkExperience
 
     const instructorinfo = await user.instructor.findOne({
