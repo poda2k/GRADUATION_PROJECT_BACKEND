@@ -13,7 +13,14 @@ num_courses:{
 }   
 });
 
-const course_cart = connec.define('course_cart',{});
+const course_cart = connec.define('course_cart',{
+    id :{
+        type:Sequelize.INTEGER,
+        allowNull:false ,
+        autoIncrement:true,
+        primaryKey:true
+    }
+});
 
 const search_his =connec.define('search history',{
 search_content:{

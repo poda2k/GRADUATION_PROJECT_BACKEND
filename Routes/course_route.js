@@ -12,7 +12,7 @@ router.get('/courseSidebar' , course.GETcourseSidebarcard);
 
 
 //  POST //
-router.post('/courses/ADDtoCart' , Auth.userAuth , course.postADDCart);
+router.post('/courses/ADDtoCart/:courseID' , Auth.userAuth , course.postADDCart);
 router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
 
 //  POST //

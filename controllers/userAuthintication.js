@@ -275,9 +275,9 @@ exports.POSTlogin = (req, res, next) => {
                 res.json({
                     massage: "logged in successfully",
                     token: token ,
-                    role: result.user_type,
-                    userId: result.id,
-                    userName: result.name
+                    role: logged_user.user_type,
+                    userId: logged_user.id,
+                    userName: logged_user.name
                 })
             })
             .catch(err => {
@@ -399,7 +399,7 @@ exports.Postinstructor = (req, res, next) => {
             user.user.create({
                 Email_Login: Email,
                 Password: password,
-                Date_of_Birth: DOB,
+                // Date_of_Birth: DOB,
                 Name: Name,
                 Gender: gender,
                 About_Me: aboutme,

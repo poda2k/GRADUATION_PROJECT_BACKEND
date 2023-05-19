@@ -14,7 +14,7 @@ exports.POSTcourse = (req, res, next) => {
     const course_price = req.body.course_price ;
     const course_description = req.body.course_description ;
     const course_language = req.body.course_language ;
-    const course_image = req.file.path.split('\\').join('/');
+    const image = req.file.path.split('\\').join('/');
     const course_rate = 0.0 ;
     const total_hours = req.body.total_hours ;
     const num_sections = req.body.num_sections ;
@@ -27,8 +27,6 @@ exports.POSTcourse = (req, res, next) => {
     const Lesson_Name =req.body.Lesson_Name;
     const Lesson_Type =req.body.Lesson_Type;
     const Lesson_Description =req.body.Lesson_Description;
-    console.log(course_image)
-    const imageUrl = course_image.path;
     user.instructor.findOne({
         where:{
             userId : req.userId
@@ -42,7 +40,7 @@ exports.POSTcourse = (req, res, next) => {
                 course_price : course_price,
                 course_description: course_description,
                 course_language: course_language,
-                course_image : course_image,
+                course_image : image,
                 course_rate : course_rate,
                 total_hours : total_hours,
                 num_sections : num_sections,
@@ -343,16 +341,41 @@ exports.postADDCart = (req, res, next) => {
             }
         }).then(cartINFO => {
             if(!cartINFO){
-
+                cart.crt.create({
+                    num_courses : 0 ,
+                    customerId : customer.id
+                }).then(newcart => {
+                    cart.course_cart.create({
+                        courseId : courseID ,
+                        cartId : cartINFO.id
+                    }).then(cart_course_=>{
+                        console.log("first cart created for new customer")
+                        res.json({massage : "created new cart for new user"})
+                    }).catch(err => {console.log(err);});
+                }).catch(err => {
+                    console.log("error in create cart", err);
+                })
             }
-            cart.crt.create({
-                num_courses : 0 ,
-                customerId : customer.id
-            }).then(cart_course => {
-                // cart.course_cart.
-            }).catch(err => {
-                console.log("error in create cart", err);
-            })
+            num_courses = cartINFO.num_courses + 1 ;
+            cart.crt.update({
+                num_courses : num_courses
+            },{
+                where: {
+                    customerId : customer.id
+                }
+            }
+            ).then(CRT => {
+                cart.course_cart.create({
+                    courseId : courseID ,
+                     cartId : cartINFO.id
+                  }).then(cart_course_=>{
+                    console.log("already existed cart updated")
+                    res.json({massage : "done"})
+                  }).catch(err => {console.log("error in create cart_course",err)})
+                console.log("num_courses updated")
+            }).catch(err => {console.log(err);});
+            
+          
         }).catch(err => {
             console.log("error in cart")
         })
