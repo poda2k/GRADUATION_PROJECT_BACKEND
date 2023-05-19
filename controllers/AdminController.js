@@ -50,6 +50,9 @@ exports.GETApprovedInstructors = (req, res, next) => {
 exports.UPDATEinstructorStatus = async(req, res, next) => {
     const Approved = req.body.Approved;
     const id = req.params.userId;
+    const instructor = user.instructor
+    const contactType = user.contactType
+    const WorkExperience = user.WorkExperience
 
     const instructorinfo = await user.instructor.findOne({
         where : {
@@ -95,6 +98,15 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
             console.log(err);
         })
     }
+
+    user.user.destroy({
+        where : {
+            id : id
+        } ,
+        include :[instructor ,WorkExperience,contactType]
+    }).then(result => {
+        res.json({massage : "instructor rejected"})
+    }).catch(err => {console.log(err);})
 
 
 }
