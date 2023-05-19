@@ -2,20 +2,31 @@ const user = require('../DataBase/mainuserdata');
 const bcrypt = require('bcryptjs');
 
 exports.GETpendingInstructors = (req, res, next) => {
-
-    user.instructor.findAll({
+    const instructor = user.instructor 
+    const contact_type = user.contacttype
+    user.user.findAll({
         where: {
-            Admin_approvement_ins: false
-        }
-    }).then(result => {
-        if (!result) {
-            const error = new Error('no instructors fetched');
-            throw error;
-        }
-        res.status(200).json({ instructorRequests: result });
-    }).catch(err => {
-        console.log(err);
-    })
+            user_type: 'pending Individual Instructor'
+        } ,
+        include : [contact_type ,instructor ]
+    }).then(userINFO => {
+        res.json({ instructor :userINFO })
+
+    }).catch(err => console.log(err));
+// ffffffffffffffffffffffffffffffffffffffffffff//
+    // user.instructor.findAll({
+    //     where: {
+    //         Admin_approvement_ins: false
+    //     }
+    // }).then(result => {
+    //     if (!result) {
+    //         const error = new Error('no instructors fetched');
+    //         throw error;
+    //     }
+    //     res.status(200).json({ instructorRequests: result });
+    // }).catch(err => {
+    //     console.log(err);
+    // })
 }
 exports.GETApprovedInstructors = (req, res, next) => {
 
