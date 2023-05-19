@@ -17,7 +17,7 @@ route.post('/create/educationalpartner' , isAuth.Admin , Admincontroller.POSTedu
 
 //  GET USER DATA //
 route.get('/Admin/PendingInstructors',isAuth.Admin,Admincontroller.GETpendingInstructors);  
-route.get('/Admin/ApprovedInstructors',Admincontroller.GETApprovedInstructors);
+route.get('/Admin/ApprovedInstructors',isAuth.Admin,Admincontroller.GETApprovedInstructors);
 route.get('/Admin/Allusers',isAuth.Admin,Admincontroller.GETALLusers);
 route.get('/instructor-details/:instructorId' , course.Getinstructorconponent);
 route.get('/allinstructors' , Admincontroller.GETallinstructors );
