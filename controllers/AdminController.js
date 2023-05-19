@@ -29,22 +29,33 @@ exports.GETpendingInstructors = (req, res, next) => {
     // })
 }
 exports.GETApprovedInstructors = (req, res, next) => {
-
-    user.instructor.findAll({
+    const instructor = user.instructor 
+    const contact_type = user.contacttype
+    user.user.findAll({
         where: {
-            Admin_approvement_ins: true
-        }
-    }).then(result => {
-        if (!result) {
-            const error = new Error('no instructors fetched');
-            throw error;
-        }
-        res.status(200).json({
-            data: result
-        })
-    }).catch(err => {
-        console.log(err);
-    })
+            user_type: 'Individual Instructor'
+        } ,
+        include : [contact_type ,instructor ]
+    }).then(userINFO => {
+        res.json({ instructor :userINFO })
+
+    }).catch(err => console.log(err));
+// seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeccccccccccccccccccccccttion / ///
+    // user.instructor.findAll({
+    //     where: {
+    //         Admin_approvement_ins: true
+    //     }
+    // }).then(result => {
+    //     if (!result) {
+    //         const error = new Error('no instructors fetched');
+    //         throw error;
+    //     }
+    //     res.status(200).json({
+    //         data: result
+    //     })
+    // }).catch(err => {
+    //     console.log(err);
+    // })
 }
 
 exports.UPDATEinstructorStatus = async(req, res, next) => {
