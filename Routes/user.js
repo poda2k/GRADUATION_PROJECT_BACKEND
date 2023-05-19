@@ -29,7 +29,7 @@ route.put('/Admin/updateInstructor/:userId',isAuth.Admin, Admincontroller.UPDATE
 
 
 // DELETE //
-route.delete('/Admin/deleteInstructor/:instructorId' ,isAuth.Admin,Admincontroller.DELETEinstructor );
+route.delete('/Admin/deleteInstructor/:userId' ,isAuth.Admin,Admincontroller.DELETEinstructor );
 route.delete('/Admin/deleteCustomer/:customerId' ,isAuth.Admin,Admincontroller.DELETECustomer);
 
 module.exports = route ;

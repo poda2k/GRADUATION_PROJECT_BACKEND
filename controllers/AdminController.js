@@ -125,16 +125,17 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
 }
 
 exports.DELETEinstructor = (req, res, next) => {
-    const id = req.params.instructorId;
+    const id = req.params.userId;
+
     user.instructor.findOne({
         where: {
-            id: id
+            userId: id
         }
     }).then(result => {
         // let TEMP_id = result.id
         user.instructor.destroy({
             where: {
-                id: id
+                id: result.id
             }
         }).then(result => {
             if (!result) {
@@ -146,7 +147,7 @@ exports.DELETEinstructor = (req, res, next) => {
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.user.destroy({
             where: {
-                id: result.userId
+                id: id
             }
         }).then(result => {
             if (!result) {
@@ -158,7 +159,7 @@ exports.DELETEinstructor = (req, res, next) => {
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.WorkExperience.destroy({
             where: {
-                userId: result.userId
+                userId: id
             }
         }).then(result => {
             if (!result) {
@@ -170,7 +171,7 @@ exports.DELETEinstructor = (req, res, next) => {
         // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  //
         user.contacttype.destroy({
             where: {
-                userId: result.userId
+                userId: id
             }
         }).then(result => {
             if (!result) {
