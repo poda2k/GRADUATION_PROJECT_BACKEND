@@ -377,7 +377,7 @@ exports.Postinstructor = (req, res, next) => {
     const usertype = "Individual Instructor";
     const Country = req.body.country;
     const City = req.body.City;
-    // const image = req.file.path.split('\\').join('/');
+    const image = req.file.path.split('\\').join('/');
     const Mobile_Number_One = req.body.Mobile_Number_One;
     const Facebook_URL = req.body.Facebook_URL;
     const Gmail_Email = req.body.Gmail_Email;
@@ -403,7 +403,7 @@ exports.Postinstructor = (req, res, next) => {
                 Name: Name,
                 Gender: gender,
                 About_Me: aboutme,
-                // Image_Profile : image ,
+                Image_Profile : image ,
                 user_type: usertype
             }).then(result => {
                 TEMP_id1 = result.id;
