@@ -49,11 +49,11 @@ exports.GETApprovedInstructors = (req, res, next) => {
 
 exports.UPDATEinstructorStatus = async(req, res, next) => {
     const Approved = req.body.Approved;
-    const id = req.params.instructorId;
+    const id = req.params.userId;
 
-    const userinfo = await user.instructor.findOne({
+    const instructorinfo = await user.instructor.findOne({
         where : {
-            id : id
+            userId : id
         }
     })
 
@@ -66,7 +66,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
                 walletId: result.id
             }, {
                 where: {
-                    id: id
+                    id: instructorinfo.id
                 }
             }
             ).then(result => {
@@ -83,7 +83,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
                 user_type : "Individual Instructor"
             },{
                 where : {
-                    id : userinfo.userId
+                    id : id
                 }
             }).then( result3=> {
                 console.log("status updated");
@@ -95,6 +95,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
             console.log(err);
         })
     }
+
 
 }
 

@@ -25,7 +25,7 @@ route.get('/instructorprofile/:userId' , course.Getinstructorprofile) ;
 route.get('/instructors/instructorcomponent/:userId' , course.Getinstructorconponent);
 
 //update instructor//
-route.put('/Admin/updateInstructor/:instructorId',isAuth.Admin, Admincontroller.UPDATEinstructorStatus );
+route.put('/Admin/updateInstructor/:userId',isAuth.Admin, Admincontroller.UPDATEinstructorStatus );
 
 
 // DELETE //
