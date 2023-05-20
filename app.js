@@ -264,7 +264,7 @@ payment.payment.belongsTo( mainuserdata.customer );
 
 //--------------------------------------------------------
 
-database.sync({force: true})
+database.sync()
     .then( ( result ) => {
         app.listen( 4000 );
         console.log( 'all set' )
