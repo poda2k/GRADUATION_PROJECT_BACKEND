@@ -4,7 +4,7 @@ const cart = require('../DataBase/Analysis') ;
 
 
 let instructor_image;
-let lessonarray =[];
+// let lessonarray =[];
 
 
 exports.POSTcourse = (req, res, next) => {
@@ -321,7 +321,8 @@ exports.singlecoursepage = async (req, res) => {
     //     return { id, section_name, lessons };
     //   });
     //   console.log(result)
-      res.status(200).json(sections);
+    let showLessons = false
+      res.status(200).json({sections,});
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }

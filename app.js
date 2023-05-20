@@ -25,7 +25,7 @@ const { v4: uuidv4 } = require( 'uuid' );
 // } ) );
 
 
-const fileFilter = ( req, file, cb ) => {
+const fileFilterFORIMAGES = ( req, file, cb ) => {
     if (
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
@@ -44,9 +44,22 @@ const FileStorage = multer.diskStorage( {
         cb( null, 's' + uuidv4() + '-' + file.originalname );
     }
 } );
-app.use( multer( { storage: FileStorage, fileFilter: fileFilter } ).single( 'image' ) );
+
+const fileFilterFORvideos = (req , fiel ,cb)=>{
+    if(  
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+    ){
+        cb(null,true)
+    }
+    cb(null,false)
+}
+app.use( multer( { storage: FileStorage, fileFilter: fileFilterFORIMAGES } ).single( 'image' ) );
+app.use( multer( { storage: FileStorage, fileFilter: fileFilterFORvideos } ).single( 'Videos' ) );
 app.use( bodyParser.json() );
 app.use( '/', express.static( path.join( __dirname, 'images' ) ) );
+app.use( '/', express.static( path.join( __dirname, 'Videos' ) ) );
 
 app.use( ( req, res, next ) => {
     res.setHeader( 'Access-Control-Allow-Origin', '*' );

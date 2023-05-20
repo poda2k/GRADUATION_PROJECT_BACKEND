@@ -105,6 +105,10 @@ const connec = require('./DB_con');
         ,section_lesson:{
             type:Sequelize.INTEGER,
             allowNull:true
+        },
+        showLessons :{
+            type:Sequelize.BOOLEAN ,
+            allowNul : false
         }
 
     });
@@ -121,6 +125,10 @@ const connec = require('./DB_con');
         ,lesson_description:{
             type:Sequelize.STRING,
             allowNul:true
+        },
+        Video : {
+            type:Sequelize.STRING ,
+            allowNull:true
         }
     });
 
