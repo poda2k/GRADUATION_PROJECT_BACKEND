@@ -69,6 +69,10 @@ const connec = require('./DB_con');
 
     ,num_student_enrolled:{
         type:Sequelize.INTEGER
+    },
+    level : {
+        type : Sequelize.STRING, 
+        allowNul : false
     }
     });
 

@@ -25,6 +25,7 @@ const { v4: uuidv4 } = require( 'uuid' );
 // } ) );
 
 
+// IMAGES SECTION //
 const fileFilterFORIMAGES = ( req, file, cb ) => {
     if (
         file.mimetype === 'image/png' ||
@@ -36,7 +37,7 @@ const fileFilterFORIMAGES = ( req, file, cb ) => {
         cb( null, false );
     }
 }
-const FileStorage = multer.diskStorage( {
+const FileStorageFORimages = multer.diskStorage( {
     destination: function ( req, file, cb ) {
         cb( null, 'images' );     // giving the destination and null error in the callback
     },
@@ -45,19 +46,32 @@ const FileStorage = multer.diskStorage( {
     }
 } );
 
+// VIDEOS SECTION //
 const fileFilterFORvideos = (req , fiel ,cb)=>{
     if(  
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
+    file.mimetype === 'Videos/mp4' 
+    // ||
+    // file.mimetype === 'Videos/jpg' ||
+    // file.mimetype === 'Videos/jpeg'
     ){
         cb(null,true)
     }
     cb(null,false)
 }
-app.use( multer( { storage: FileStorage, fileFilter: fileFilterFORIMAGES } ).single( 'image' ) );
-app.use( multer( { storage: FileStorage, fileFilter: fileFilterFORvideos } ).single( 'Videos' ) );
+const FileStorageFORvideos = multer.diskStorage( {
+    destination: function ( req, file, cb ) {
+        cb( null, 'Videos' );     // giving the destination and null error in the callback
+    },
+    filename: function ( req, file, cb ) {
+        cb( null, 's' + uuidv4() + '-' + file.originalname );
+    }
+} );
+
+app.use( multer( { storage: FileStorageFORimages, fileFilter: fileFilterFORIMAGES } ).single( 'image' ) );
+app.use( multer( { storage: FileStorageFORvideos, fileFilter: fileFilterFORvideos } ).single( 'Video' ) );
+
 app.use( bodyParser.json() );
+
 app.use( '/', express.static( path.join( __dirname, 'images' ) ) );
 app.use( '/', express.static( path.join( __dirname, 'Videos' ) ) );
 
@@ -75,21 +89,21 @@ app.use( course );
 
 // dd
 // Admin Account DON`T DELETE THIS ROW //
-// mainuserdata.user.create({
-//     Name : 'A nice person' ,
-//     Email_Login : 'Admin@admin.com',
-//     Password : 'onlyAdmin123',
-//     user_type: 'admin',
-//     Gender: 'male',
-//     About_Me : 'I am the Admin Of this Website',
+mainuserdata.user.create({
+    Name : 'A nice person' ,
+    Email_Login : 'Admin@admin.com',
+    Password : 'onlyAdmin123',
+    user_type: 'admin',
+    Gender: 'male',
+    About_Me : 'I am the Admin Of this Website',
 
-// })
-// .then((result)=>{
-//     console.log(result);
-// })
-// .catch((err)=>{
-//     console.log(err);
-// });
+})
+.then((result)=>{
+    console.log(result);
+})
+.catch((err)=>{
+    console.log(err);
+});
 
 // Admin Account //
 

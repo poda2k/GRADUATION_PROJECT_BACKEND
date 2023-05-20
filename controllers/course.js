@@ -9,12 +9,15 @@ let instructor_image;
 
 exports.POSTcourse = (req, res, next) => {
     const course_name  =  req.body.course_name ;
-    const course_status = "will be deleted"
+    const skilled_learn = req.body.skilled_learn ;
     const Instructor_name = req.userNAME ;
     const course_price = req.body.course_price ;
     const course_description = req.body.course_description ;
+    const level = req.body.level ;
+    const category = req.body.category ;
     const course_language = req.body.course_language ;
     const image = req.file.path.split('\\').join('/');
+    const Video = req.file.path.split('\\').join('/');
     const course_rate = 0.0 ;
     const total_hours = req.body.total_hours ;
     const num_sections = req.body.num_sections ;
@@ -35,7 +38,6 @@ exports.POSTcourse = (req, res, next) => {
         if(req.userType==='Individual Instructor'){
             course.course.create({
                 course_name  : course_name,
-                course_statues : course_status,
                 Instructor_name : Instructor_name,
                 course_price : course_price,
                 course_description: course_description,
