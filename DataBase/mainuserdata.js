@@ -19,7 +19,7 @@ const user = connec.define('user',{
 
     },
     Image_Profile : {
-        type:Sequelize.BLOB,
+        type:Sequelize.STRING,
         allowNull : true
     },
     Date_of_Birth : {
@@ -36,7 +36,7 @@ const user = connec.define('user',{
        
     },
     About_Me : {
-        type:Sequelize.STRING,
+        type:Sequelize.TEXT('long'),
         allowNull : true
     },
     Age : {
