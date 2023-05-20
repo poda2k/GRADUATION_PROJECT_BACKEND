@@ -7,7 +7,7 @@ const course = require('../controllers/course');
 router.get('/course/:courseId',course.GETcourse);
 router.get('/courses',course.GETallcourses);
 router.get('/getsinglecourse/:courseid',course.singlecoursepage);
-router.get('/courseSidebar' , course.GETcourseSidebarcard);
+router.get('/courseSidebar/courseId' , course.GETcourseSidebarcard);
 // GET //
 
 
