@@ -30,14 +30,26 @@ exports.POSTcourse = (req, res, next) => {
     const Lesson_Name = req.body.Lesson_Name;
     const Lesson_Type = req.body.Lesson_Type;
     const Lesson_Description = req.body.Lesson_Description;
-    let seclength = section_lesson.length
-    // console.log(seclength)
-    let lessonlength = 0;
-    for (let i = 0; i < seclength.length; i++) {
+    console.log(section_lesson.length)
+    console.log(section_lesson)
+
+    let lessonlength =1;
+    for (let i = 0; i < 2; i++) {
         lessonlength = lessonlength + section_lesson[i].length
     }
-    let secname = section_lesson[0]
-    console.log(secname)
+    
+    function waitTIMER(){
+        let count =1 
+        return intervalId = setInterval( ()=>{
+            // res.json({massage:"a7a neeek"})
+            console.log(lessonlength)
+            if (count === 1) {
+                clearInterval(intervalId);
+              }
+        }, 1000); 
+
+    }
+    waitTIMER();
     user.instructor.findOne({
         where: {
             userId: req.userId
@@ -87,34 +99,25 @@ exports.POSTcourse = (req, res, next) => {
                 // res.json({massage : "a7a neeek"})
                 console.log("section and lesson updated")
 
-            }).then(result => {
-                for (let i = 0; i < skilled_learn.length; i++) {
-                    course.skillgain.create({
-                        skill_gain_name: skilled_learn[i],
-                        courseId: result.id
-                    }).then(skilledlearn => {
-                        console.log("skill gained successfully inserted")
-                        for (let i = 0; i < pre.length; i++) {
-                            course.prereq.create({
-                                pre_name: pre[i],
-                                courseId: result.id
-                            })
-                        }
-                    }).catch(err => {
-                        console.log("error in skilled learned insert")
-                    })
-                }
-    function waitTIMER(){
-        let count =1 
-        return intervalId = setInterval( ()=>{
-            res.json({massage:"a7a neeek"})
-            if (count === 1) {
-                clearInterval(intervalId);
-              }
-        }, 1000); 
-
-    }
-    waitTIMER();
+            //     for (let i = 0; i < skilled_learn.length; i++) {
+            //         course.skillgain.create({
+            //             skill_gain_name: skilled_learn[i],
+            //             courseId: result.id
+            //         }).then(skilledlearn => {
+            //             console.log("skill gained successfully inserted")
+            //             for (let i = 0; i < pre.length; i++) {
+            //                 course.prereq.create({
+            //                     pre_name: pre[i],
+            //                     courseId: result.id
+            //                 }).then(preresult => {
+            //                     console.log("operation")
+            //                 }).catch(error => {
+            //                     console.log("error")
+            //                 })
+            //             }
+            // })
+            //     }
+    
                
             
             }).catch(err => {
@@ -387,8 +390,8 @@ exports.singlecoursepage = async (req, res) => {
         //     return { id, section_name, lessons };
         //   });
         //   console.log(result)
-        let showLessons = false
-        res.status(200).json({ sections, });
+        // let showLessons = false
+        res.status(200).json({sections});
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
