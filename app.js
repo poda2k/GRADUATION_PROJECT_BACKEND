@@ -1,6 +1,7 @@
 const express = require( 'express' );
 
 const app = express();
+// import { fileURLToPath } from 'url';
 const bodyParser = require( 'body-parser' );
 const home = require( './Routes/main' );
 const userRoutes = require( './Routes/user' );
@@ -16,6 +17,7 @@ const payment = require( './DataBase/payment' );
 const path = require( 'path' );
 const multer = require( 'multer' );
 const { v4: uuidv4 } = require( 'uuid' );
+// const __filename = fileURLToPath(import.meta.url)
 
 // const cors = require( 'cors' );
 // app.use( cors( {
@@ -71,9 +73,10 @@ app.use( multer( { storage: FileStorageFORimages, fileFilter: fileFilterFORIMAGE
 // app.use( multer( { storage: FileStorageFORvideos, fileFilter: fileFilterFORvideos } ).single( 'Video' ) );
 
 app.use( bodyParser.json() );
-
-app.use( '/', express.static( path.join( __dirname, 'images' ) ) );
-app.use( '/', express.static( path.join( __dirname, 'Videos' ) ) );
+// const path1 = path.dirname(__filename);
+// app.use("/images",express.static(path1.join(__dirname,'images')))
+app.use( '/', express.static(path.join( __dirname, 'images' ) ) );
+// app.use( '/', express.static( path.join( __dirname, 'Videos' ) ) );
 
 app.use( ( req, res, next ) => {
     res.setHeader( 'Access-Control-Allow-Origin', '*' );

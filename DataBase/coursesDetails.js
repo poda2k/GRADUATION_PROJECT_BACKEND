@@ -133,6 +133,9 @@ const connec = require('./DB_con');
         Video : {
             type:Sequelize.STRING ,
             allowNull:true
+        },
+        lesson_duration:{
+            type:Sequelize.STRING ,
         }
     });
 
