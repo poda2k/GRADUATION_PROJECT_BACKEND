@@ -31,7 +31,7 @@ exports.POSTcourse = (req, res, next) => {
     const Lesson_Type = req.body.Lesson_Type;
     const Lesson_Description = req.body.Lesson_Description;
     console.log(section_lesson.length)
-    console.log(section_lesson)
+    // console.log(section_lesson[0].length)
 
     let lessonlength =1;
     for (let i = 0; i < 2; i++) {
