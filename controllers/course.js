@@ -450,7 +450,7 @@ console.log(req.userId)
              cart.course_cart.destroy({
         where : {
             courseId : courseId ,
-            cartId : updatedresult.id
+            cartId : CARTinfo.id
         }
              }).then(deletedResult => {
                  console.log('successfull')
