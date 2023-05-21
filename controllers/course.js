@@ -490,3 +490,92 @@ console.log(req.userId)
 //     res.json({massage : "deleted successfully"})
 //  }).catch(err => console.log("error in delete course form cart" ,err))
 }
+
+exports.getCart = (req,res,next)=>{
+   
+    user.customer.findOne({
+        userId : req.userId
+    }).then(CUSinfo =>{
+        cart.crt.findOne({
+            where:{
+                customerId : CUSinfo.id ,
+                purchased : false
+            }
+        }).then(crt => {
+            // console.log(crt)
+            cart.course_cart.findAll({
+                where:{
+                    cartId : crt.id
+                }
+            }).then( async (courses) =>{
+                // console.log(courses);
+                
+                let arrayOfcourses = []
+                let total_price = 0
+                {
+                for(let i=0 ; i<courses.length ; i++){
+                var x = (await (course.course.findOne({
+                    where : {
+                        id : courses[i].courseId
+                    }})))
+                    // console.log(x);
+                    arrayOfcourses = [...arrayOfcourses, x]
+                    total_price = total_price + x.course_price
+                }
+                console.log(arrayOfcourses);
+                console.log(total_price);
+                res.json({arrayOfcourses,total_price})
+            
+        }
+            // .then(userCourses =>{
+            //     // console.log(userCourses);
+            //     arrayOfcourses = [...arrayOfcourses, userCourses[i]]
+            //     console.log(arrayOfcourses)
+               
+            // }).then(userCourses =>{
+            //     res.json({arrayOfcourses})
+            // }).catch(err =>{
+            //     console.log("error in fetch course of user",err)
+            // })
+        //    
+            // function waitTIMER(){
+            //             let count =1 
+            //             return intervalId = setInterval( ()=>{
+            //                //
+            //                 if (count === 1) {
+            //                     clearInterval(intervalId);
+            //                   }
+            //             }, 1000); 
+                
+            //         }
+            //         waitTIMER();
+            
+            }).catch(error=>{
+                console.log("error in association table ",error);
+            })
+        }).catch(err => {
+            console.log("error in")
+        })
+    }).catch(err =>{
+        console.log("error in getting cart")
+    })
+    
+}
+
+exports.test = async(req,res) =>{
+
+   const customer = await user.customer.findOne({
+        userId : req.userId
+    })
+
+    cart.course_cart.findAll({
+
+    })
+    // user.customer.findByPk(
+    //    customer.id
+    //    ,
+    //    {include: [cart.crt ]}
+    // ).then(result =>{
+    //     res.json(result)
+    // })
+}
