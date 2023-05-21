@@ -8,6 +8,7 @@ router.get('/course/:courseId',course.GETcourse);
 router.get('/courses',course.GETallcourses);
 router.get('/getsinglecourse/:courseid',course.singlecoursepage);
 router.get('/courseSidebar/:courseId' , course.GETcourseSidebarcard);
+router.get('/cart', Auth.userAuth , course.getCart);
 // GET //
 
 
