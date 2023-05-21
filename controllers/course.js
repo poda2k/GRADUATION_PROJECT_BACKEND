@@ -1,13 +1,15 @@
 const course = require('../DataBase/coursesDetails');
 const user = require('../DataBase/mainuserdata');
 const cart = require('../DataBase/Analysis');
+const mainproduct = require('../DataBase/mainproduct');
+
 
 
 let instructor_image;
 // let lessonarray =[];
 
 
-exports.POSTcourse = (req, res, next) => {
+exports.POSTcourse = async (req, res, next) => {
     const course_name = req.body.course_name;
     const skilled_learn = req.body.skilled_learn;
     const Instructor_name = req.userNAME;
@@ -19,137 +21,92 @@ exports.POSTcourse = (req, res, next) => {
     // const image = req.file.path.split('\\').join('/');
     const course_language = req.body.course_language;
     // const Video = req.file.path.split('\\').join('/');
-    const course_rate = 0.0;
     const total_hours = req.body.total_hours;
-    const section_lesson = req.body.section_lesson;
-    const course_active = 1;
-    const admin_active = 0;
-    const num_student_enrolled = 0;
-    const section_name = req.body.section_name;
-    const Total_Section_Lessons = req.body.Total_Section_Lessons;
-    const Lesson_Name = req.body.Lesson_Name;
-    const Lesson_Type = req.body.Lesson_Type;
-    const Lesson_Description = req.body.Lesson_Description;
-    console.log(section_lesson.length)
-    console.log(section_lesson[1].length)
-
-    let lessonlength =1;
-    for (let i = 0; i < 2; i++) {
-        lessonlength = lessonlength + section_lesson[i].length
+    const sections = req.body.sections;
+    console.log(sections.length)
+    console.log(sections[0].lesson.length)
+    let num_lessons =0;
+    for(let i = 0; i < sections.length; i++) {
+        num_lessons=num_lessons+sections[i].lesson.length;
     }
+    console.log(num_lessons)
     
-    function waitTIMER(){
-        let count =1 
-        return intervalId = setInterval( ()=>{
-            // res.json({massage:"a7a neeek"})
-            console.log(lessonlength)
-            if (count === 1) {
-                clearInterval(intervalId);
-              }
-        }, 1000); 
-
-    }
-    waitTIMER();
-    user.instructor.findOne({
+  
+        // const topicdetails = await mainproduct.topic.findOne({
+        //      where: {
+        //         Topic_Name: category
+        //      }
+        //  })
+    
+    
+   
+   const insDeltails = await user.instructor.findOne({
         where: {
             userId: req.userId
         }
-    }).then(result => {
-        if (req.userType === 'Individual Instructor') {
-
-            course.course.create({
-                course_name: course_name,
-                Instructor_name: Instructor_name,
-                course_price: course_price,
-                course_description: course_description,
-                course_language: course_language,
-                // course_image : image,
-                level: level,
-                course_rate: course_rate,
-                total_hours: total_hours,
-                num_sections: section_lesson.length,
-                num_lesson: lessonlength,
-                course_active: course_active,
-                admin_active: admin_active,
-                num_student_enrolled: num_student_enrolled,
-                instructorId: result.id
-            }).then(result => {
-                for (let i = 0; i < section_lesson.length; i++) {
-                    course.sections.create({
-                        section_name: section_lesson[i],
-                        section_lesson: section_lesson[i].length,
-                        courseId: result.id
-                    }).then(secINFO => {
-                        for (let j = 0; j < section_lesson[i].length; j++) {
-                            course.lesson.create({
-                                Lesson_Name: section_lesson[i][j][0],
-                                lesson_duration: section_lesson[i][j][1],
-                                SectionId: secINFO.id
-                            }
-                            ).then(lessoninfo => {
-                                console.log(lessoninfo)
-                            }).catch(err => {
-                                console.log("error in lesson insertion")
-                            })
-                        }
-                    }).catch(err => {
-                        console.log("error in section insertion")
-                    })
-                }
-                // res.json({massage : "a7a neeek"})
-                console.log("section and lesson updated")
-
-            //     for (let i = 0; i < skilled_learn.length; i++) {
-            //         course.skillgain.create({
-            //             skill_gain_name: skilled_learn[i],
-            //             courseId: result.id
-            //         }).then(skilledlearn => {
-            //             console.log("skill gained successfully inserted")
-            //             for (let i = 0; i < pre.length; i++) {
-            //                 course.prereq.create({
-            //                     pre_name: pre[i],
-            //                     courseId: result.id
-            //                 }).then(preresult => {
-            //                     console.log("operation")
-            //                 }).catch(error => {
-            //                     console.log("error")
-            //                 })
-            //             }
-            // })
-            //     }
+    })
     
-               
-            
-            }).catch(err => {
-                console.log("err");
-            })
-        } else if (req.userType === 'educational_partner') {
-            course.course.create({
-                course_name: course_name,
-                course_statues: course_statues,
-                Instructor_name: Instructor_name,
-                course_price: course_price,
-                course_description: course_description,
-                course_language: course_language,
-                course_image: course_image,
-                course_rate: course_rate,
-                total_hours: total_hours,
-                num_sections: num_sections,
-                num_lesson: num_lesson,
-                course_active: course_active,
-                admin_active: admin_active,
-                num_student_enrolled: num_student_enrolled,
-                EducationalPartnerId: result.id
-            }).then(result => {
-                res.status(201).json({
-                    massage: "course uploaded successfully"
-                })
-            }).catch(err => {
-                console.log(err);
+    course.course.create({
+        course_name:course_name,
+        course_price:course_price,
+        course_description:course_description,
+        course_language:course_language,
+        course_rate: 0.0,
+        num_student_enrolled:0,
+        level:level,
+        // topicId:topicdetails.id,
+        Instructor_name:req.userNAME,
+        num_sections:sections.length,
+        num_lesson:num_lessons,
+        course_active: 1,
+        admin_active: 0,
+        instructorId:insDeltails.id
+    }).then(courseresult =>{
+        for(let i=0; i<skilled_learn.length; i++) {
+            course.skillgain.create({
+                skill_gain_name:skilled_learn[i],
+                courseId:courseresult.id
             })
         }
-    }).catch(err => {
-        console.log(err);
+        for(let i=0; i<pre.length; i++) {
+            course.prereq.create({
+                pre_name:pre[i],
+                courseId:courseresult.id
+            })
+        }
+        for(let i=0; i<sections.length; i++) {
+            course.sections.create({
+                section_name:sections[i].sectionName,
+                courseId:courseresult.id,
+                section_lesson:sections[i].lesson.length,
+                showLessons: 0
+            }).then(sectionresult =>{
+                for(let j=0; j<sections[i].lesson.length; j++) {
+                    course.lesson.create({
+                        lesson_name:sections[i].lesson[j].lessonName,
+                        lesson_duration:sections[i].lesson[j].duration,
+                        SectionId:sectionresult.id
+                    })
+                }
+            }).catch(error => {
+                console.log("error in sectionresult" ,error);
+            })
+           
+        }
+        function waitTIMER(){
+                    let count =1 
+                    return intervalId = setInterval( ()=>{
+                        res.json({massage: "TOP JOB" })
+                        if (count === 1) {
+                            clearInterval(intervalId);
+                          }
+                    }, 1000); 
+            
+                }
+                waitTIMER();
+
+    }).catch(err =>{
+        console.log("error in course creation",err)
     })
 
 
