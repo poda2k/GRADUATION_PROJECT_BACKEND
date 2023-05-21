@@ -6,7 +6,6 @@ const mainproduct = require('../DataBase/mainproduct');
 
 
 let instructor_image;
-// let lessonarray =[];
 
 
 exports.POSTcourse = async (req, res, next) => {
