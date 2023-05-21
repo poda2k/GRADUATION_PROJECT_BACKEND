@@ -426,13 +426,67 @@ exports.postADDCart = (req, res, next) => {
 exports.DELETEcoursefromcart = (req,res) =>{
  const cartId = req.query.cartId
  const courseId = req.query.courseId
- cart.course_cart.destroy({
+console.log(req.userId)
+  user.customer.findOne({
     where : {
-        courseId : courseId ,
-        cartId : cartId
+        userId : req.userId
     }
- }).then(deletedResult=>{
-    console.log('successfull')
-    res.json({massage : "deleted successfully"})
- }).catch(err => console.log("error in delete course form cart" ,err))
+ }).then(CUSinfo =>{
+    cart.crt.findOne({
+         where :{
+            customerId : CUSinfo.id ,
+             purchased :false
+            }
+        }).then(CARTinfo =>{
+            let num_courses = CARTinfo.num_courses -1 ;
+        cart.crt.update({
+            num_courses : num_courses
+        },{
+            where : {
+                customerId : CUSinfo.id,
+                purchased : false
+            }
+        }).then(updatedresult =>{
+             cart.course_cart.destroy({
+        where : {
+            courseId : courseId ,
+            cartId : cartId
+        }
+             }).then(deletedResult => {
+                 console.log('successfull')
+                 res.json({ massage: "deleted successfully" })
+             }).catch(err => console.log("error in delete course_cart", err))
+        }).catch(err =>{
+            console.log("error in update operation", err);
+        })
+    }).catch(err =>{console.log(err)})
+    
+ }).catch(err =>{
+    console.log("error in delete from cart" ,err)
+ })
+
+//  const usercart = await cart.crt.findOne({
+//     where : {
+//         customerId : customer.id
+//     }
+//  })
+
+//  let num_courses = usercart.num_courses -1 ;
+
+//  const DELETEonefromcart = await cart.crt.update({
+//     num_courses : num_courses
+//  },{
+//     where : {
+//         customer_id : customer.id
+//     }
+//  })
+//  cart.course_cart.destroy({
+//     where : {
+//         courseId : courseId ,
+//         cartId : cartId
+//     }
+//  }).then(deletedResult=>{
+//     console.log('successfull')
+//     res.json({massage : "deleted successfully"})
+//  }).catch(err => console.log("error in delete course form cart" ,err))
 }

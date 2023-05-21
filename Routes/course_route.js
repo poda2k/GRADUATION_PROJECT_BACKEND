@@ -19,7 +19,7 @@ router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
 
 //  DELETE  //
 
-router.delete('/cart/deletecoursefromcart/',course.DELETEcoursefromcart);
+router.delete('/cart/deletecoursefromcart',Auth.userAuth,course.DELETEcoursefromcart);
 
 //  DELETE  //
 
