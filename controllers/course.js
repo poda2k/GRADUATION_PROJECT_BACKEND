@@ -424,8 +424,8 @@ exports.postADDCart = (req, res, next) => {
 }
 
 exports.DELETEcoursefromcart = (req,res) =>{
- const cartId = req.query.cartId
- const courseId = req.query.courseId
+//  const cartId = req.query.cartId
+ const courseId = req.params.courseId
 console.log(req.userId)
   user.customer.findOne({
     where : {
@@ -450,7 +450,7 @@ console.log(req.userId)
              cart.course_cart.destroy({
         where : {
             courseId : courseId ,
-            cartId : cartId
+            cartId : updatedresult.id
         }
              }).then(deletedResult => {
                  console.log('successfull')
@@ -502,14 +502,11 @@ exports.getCart = (req,res,next)=>{
                 purchased : false
             }
         }).then(crt => {
-            // console.log(crt)
             cart.course_cart.findAll({
                 where:{
                     cartId : crt.id
                 }
             }).then( async (courses) =>{
-                // console.log(courses);
-                
                 let arrayOfcourses = []
                 let total_price = 0
                 {
@@ -518,7 +515,6 @@ exports.getCart = (req,res,next)=>{
                     where : {
                         id : courses[i].courseId
                     }})))
-                    // console.log(x);
                     arrayOfcourses = [...arrayOfcourses, x]
                     total_price = total_price + x.course_price
                 }
@@ -527,29 +523,6 @@ exports.getCart = (req,res,next)=>{
                 res.json({arrayOfcourses,total_price})
             
         }
-            // .then(userCourses =>{
-            //     // console.log(userCourses);
-            //     arrayOfcourses = [...arrayOfcourses, userCourses[i]]
-            //     console.log(arrayOfcourses)
-               
-            // }).then(userCourses =>{
-            //     res.json({arrayOfcourses})
-            // }).catch(err =>{
-            //     console.log("error in fetch course of user",err)
-            // })
-        //    
-            // function waitTIMER(){
-            //             let count =1 
-            //             return intervalId = setInterval( ()=>{
-            //                //
-            //                 if (count === 1) {
-            //                     clearInterval(intervalId);
-            //                   }
-            //             }, 1000); 
-                
-            //         }
-            //         waitTIMER();
-            
             }).catch(error=>{
                 console.log("error in association table ",error);
             })
@@ -562,20 +535,19 @@ exports.getCart = (req,res,next)=>{
     
 }
 
-exports.test = async(req,res) =>{
+exports.addTowishlist = async(req ,res) =>{
 
    const customer = await user.customer.findOne({
-        userId : req.userId
-    })
+        where : {
+            userId : req.userId
+        }
+     })
 
-    cart.course_cart.findAll({
+     cart.wishlist.create({
 
-    })
-    // user.customer.findByPk(
-    //    customer.id
-    //    ,
-    //    {include: [cart.crt ]}
-    // ).then(result =>{
-    //     res.json(result)
-    // })
+     }).then((wishlist) =>{
+
+     }).catch((error) =>{
+        console.log(error , "Error creating wishlist")
+     })
 }
