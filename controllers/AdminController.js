@@ -64,12 +64,15 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
     const instructor = user.instructor
     const contactType = user.contacttype
     const WorkExperience = user.WorkExperience
-
+// try{
     const instructorinfo = await user.instructor.findOne({
         where : {
             userId : id
         }
     })
+    // }catch(error){
+    //     console.log(error)
+    // }
 
     if (Approved == true) {
         user.wallet.create({
@@ -80,7 +83,7 @@ exports.UPDATEinstructorStatus = async(req, res, next) => {
                 walletId: result.id
             }, {
                 where: {
-                    id: instructorinfo.id
+                    id : instructorinfo.id
                 }
             }
             ).then(result => {

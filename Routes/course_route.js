@@ -17,4 +17,10 @@ router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
 
 //  POST //
 
+//  DELETE  //
+
+router.delete('/cart/deletecoursefromcart/',course.DELETEcoursefromcart);
+
+//  DELETE  //
+
 module.exports = router;
