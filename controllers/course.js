@@ -422,3 +422,17 @@ exports.postADDCart = (req, res, next) => {
         console.log(err);
     })
 }
+
+exports.DELETEcoursefromcart = (req,res) =>{
+ const cartId = req.query.cartId
+ const courseId = req.query.courseId
+ cart.course_cart.destroy({
+    where : {
+        courseId : courseId ,
+        cartId : cartId
+    }
+ }).then(deletedResult=>{
+    console.log('successfull')
+    res.json({massage : "deleted successfully"})
+ }).catch(err => console.log("error in delete course form cart" ,err))
+}
