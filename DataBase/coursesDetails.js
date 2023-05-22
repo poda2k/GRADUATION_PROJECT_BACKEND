@@ -20,11 +20,11 @@ const connec = require('./DB_con');
     }
 
     ,course_description:{
-        type:Sequelize.STRING,
+        type:Sequelize.TEXT('long'),
         allowNull:true
     },
     course_summary :{
-        type : Sequelize.STRING, 
+        type:Sequelize.TEXT('long'),
         allowNul : true
     }
     ,course_language:{
@@ -39,9 +39,8 @@ const connec = require('./DB_con');
 
     ,course_rate:{
         type:Sequelize.INTEGER,
-        validate:{
-            max:5
-        }
+        allowNull : true
+       
     }
 
     ,total_hours:{
@@ -198,7 +197,7 @@ const connec = require('./DB_con');
             allowNull:true
         }
         ,description:{
-            type:Sequelize.STRING,
+            type:Sequelize.TEXT('long'),
             allowNull:true
         },
         Admin_approvement_pack:{
@@ -247,7 +246,7 @@ const connec = require('./DB_con');
             allowNull:true
         }
         ,description:{
-            type:Sequelize.STRING
+            type:Sequelize.TEXT('long')
             ,allowNull:true
         }
         ,price:{
