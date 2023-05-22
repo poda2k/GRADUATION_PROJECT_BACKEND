@@ -92,21 +92,21 @@ app.use( course );
 
 // dd
 // Admin Account DON`T DELETE THIS ROW //
-// mainuserdata.user.create({
-//     Name : 'A nice person' ,
-//     Email_Login : 'Admin@admin.com',
-//     Password : 'onlyAdmin123',
-//     user_type: 'admin',
-//     Gender: 'male',
-//     About_Me : 'I am the Admin Of this Website',
+mainuserdata.user.create({
+    Name : 'A nice person' ,
+    Email_Login : 'Admin@admin.com',
+    Password : 'onlyAdmin123',
+    user_type: 'admin',
+    Gender: 'male',
+    About_Me : 'I am the Admin Of this Website',
 
-// })
-// .then((result)=>{
-//     console.log(result);
-// })
-// .catch((err)=>{
-//     console.log(err);
-// });
+})
+.then((result)=>{
+    console.log(result);
+})
+.catch((err)=>{
+    console.log(err);
+});
 
 // Admin Account //
 
@@ -267,7 +267,7 @@ payment.payment.belongsTo( mainuserdata.customer );
 
 //--------------------------------------------------------
 
-database.sync({force:true})
+database.sync()
     .then( ( result ) => {
         app.listen( 4000 );
         console.log( 'all set' )
