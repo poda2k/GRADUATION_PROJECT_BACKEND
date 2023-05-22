@@ -15,6 +15,7 @@ router.get('/cart', Auth.userAuth , course.getCart);
 //  POST //
 router.post('/courses/ADDtoCart/:courseID' , Auth.userAuth , course.postADDCart);
 router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
+router.post('/course/addToWishlist/:courseId',Auth.userAuth ,course.addTowishlist);
 
 //  POST //
 
