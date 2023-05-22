@@ -8,6 +8,7 @@ router.get('/course/:courseId',course.GETcourse);
 router.get('/courses',course.GETallcourses);
 router.get('/getsinglecourse/:courseid',course.singlecoursepage);
 router.get('/courseSidebar/:courseId' , course.GETcourseSidebarcard);
+router.get('/cart', Auth.userAuth , course.getCart);
 // GET //
 
 
@@ -20,7 +21,7 @@ router.post('/course/purchase/:cartid',Auth.userAuth,course.postpayment);
 
 //  DELETE  //
 
-router.delete('/cart/deletecoursefromcart/',course.DELETEcoursefromcart);
+router.delete('/cart/deletecoursefromcart/:courseId',Auth.userAuth,course.DELETEcoursefromcart);
 
 //  DELETE  //
 
