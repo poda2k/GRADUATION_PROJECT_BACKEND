@@ -14,6 +14,7 @@ router.get('/courseSidebar/:courseId' , course.GETcourseSidebarcard);
 //  POST //
 router.post('/courses/ADDtoCart/:courseID' , Auth.userAuth , course.postADDCart);
 router.post('/course/create_course',Auth.checkforpartners,course.POSTcourse);
+router.post('/course/purchase/:cartid',Auth.userAuth,course.postpayment);
 
 //  POST //
 
