@@ -1,6 +1,8 @@
 const course = require('../DataBase/coursesDetails');
 const user = require('../DataBase/mainuserdata');
 const cart = require('../DataBase/Analysis');
+const payment = require('../DataBase/payment');
+const sequelize = require('sequelize');
 const mainproduct = require('../DataBase/mainproduct');
 
 
@@ -61,12 +63,12 @@ exports.POSTcourse = async (req, res, next) => {
         admin_active: 0,
         instructorId:insDeltails.id
     }).then(courseresult =>{
-        for(let i=0; i<skilled_learn.length; i++) {
-            course.skillgain.create({
-                skill_gain_name:skilled_learn[i],
-                courseId:courseresult.id
-            })
-        }
+        // for(let i=0; i<skilled_learn.length; i++) {
+        //     course.skillgain.create({
+        //         skill_gain_name:skilled_learn[i],
+        //         courseId:courseresult.id
+        //     })
+        // }
         // for(let i=0; i<pre.length; i++) {
         //     course.prereq.create({
         //         pre_name:pre[i],
@@ -347,20 +349,21 @@ exports.singlecoursepage = async (req, res) => {
         //   });
         //   console.log(result)
         // let showLessons = false
-        res.status(200).json({sections});
+        res.status(200).json({ sections });
     } catch (error) {
         res.status(500).json({ error: error });
     }
 }
 
-exports.postADDCart = (req, res, next) => {
+exports.postADDCart = async(req, res, next) => {
     const courseID = req.params.courseID;
     let num_courses
-    user.customer.findOne({
+   const customer = await user.customer.findOne({
         where: {
             userId: req.userId
         }
-    }).then(customer => {
+    })
+    // .then(customer => {
         cart.crt.findOne({
             where: {
                 customerId: customer.id,
@@ -383,46 +386,174 @@ exports.postADDCart = (req, res, next) => {
                 }).catch(err => {
                     console.log("error in create cart", err);
                 })
-            }
-
+            }else if(cartINFO){
             num_courses = cartINFO.num_courses + 1;
-            cart.crt.update({
-                num_courses: num_courses
-            }, {
+            cart.course_cart.findOne({
                 where: {
-                    customerId: customer.id,
-                    purchased: false
-                }
+                courseId : courseID ,
+                cartId : cartINFO.id
             }
-            ).then(CRT => {
-                cart.course_cart.findOne({
+            }).then(checkforCoursesincart =>{
+                if(!checkforCoursesincart){
+                cart.crt.update({
+                    num_courses: num_courses
+                }, {
                     where: {
-                        courseId: courseID
+                        customerId: customer.id,
+                        purchased: false
                     }
-                }).then(CRT_COURSE => {
-                    if (!CRT_COURSE) {
-                        cart.course_cart.create({
-                            courseId: courseID,
-                            cartId: cartINFO.id
-                        }).then(data => {
-                            console.log("new course added to cart_course")
-                            res.json({ massage: "we done here" })
-                        }).catch(error => console.log(error));
-                    }
-                    console.log("course in cart_course")
-                }).catch(err => console.log("err"))
-                console.log("num_courses updated")
-            }).catch(err => { console.log(err); });
+                }
+                ).then(CRT => {
+                    // cart.course_cart.findOne({
+                    //     where: {
+                    //         courseId: courseID
+                    //     }
+                    // }).then(CRT_COURSE => {
+                        // if (!CRT_COURSE) {
+                            cart.course_cart.create({
+                                courseId: courseID,
+                                cartId: cartINFO.id
+                            }).then(data => {
+                                console.log("new course added to cart_course")
+                                res.json({ massage: "we done here" })
+                            }).catch(error => console.log(error));
+                        // }
+                        // console.log("course in cart_course")
+                    // }).catch(err => console.log("err"))
+                    // console.log("num_courses updated")
+                }).catch(err => { console.log(err); });
+            }else if(checkforCoursesincart){
+                res.json({massage : "course already in cart"})
+            }
+            
+            }).catch(err => {
+                 console.log("error in checkforCoursesincart",err);
+                 });
+           }
 
 
         }).catch(err => {
             console.log("error in cart")
         })
-    }).catch(err => {
-        console.log(err);
-    })
+    // }).catch(err => {
+    //     console.log(err);
+    // })
 }
 
+exports.DELETEcoursefromcart = (req, res) => {
+    const cartId = req.query.cartId
+    const courseId = req.query.courseId
+    cart.course_cart.destroy({
+        where: {
+            courseId: courseId,
+            cartId: cartId
+        }
+    }).then(deletedResult => {
+        console.log('successfull')
+        res.json({ massage: "deleted successfully" })
+    }).catch(err => console.log("error in delete course form cart", err))
+}
+
+
+
+
+
+
+exports.postpayment = async (req, res) => {
+    const cartid = req.params.cartid;
+    // const customerid=req.userId;
+    const customer = await user.customer.findOne({
+        where: {
+            userId: req.userId
+        }
+    })
+    {
+        var x = await (cart.course_cart.findAll({
+            where: {
+                cartid: cartid,
+            }
+        }))
+            .then(cartresult => {
+                var totalprice = 0.0
+                for (let i = 0; i < cartresult.length; i++) {
+                    course.course.findOne({
+                        where: {
+                            id: cartresult[i].courseId
+                        }
+                    })
+                        .then(courseresult => {
+                            course.cust_course.create({
+                                courseId: courseresult.id,
+                                customerId: customer.id
+                            })
+
+                            user.instructor.update({
+                                Num_of_Student_enrolled: sequelize.literal('Num_of_Student_enrolled + 1')
+                            }, {
+                                where: {
+                                    id: courseresult.instructorId
+                                }
+                            })
+                            user.customer.update({
+                                Total_Courses: sequelize.literal('Total_Courses + 1')
+                            }, {
+                                where: {
+                                    id: customer.id
+                                }
+                            }
+                            )
+                            course.course.update({
+                                num_student_enrolled: sequelize.literal('num_student_enrolled + 1')
+                            }, {
+                                where: {
+                                    id: courseresult.id
+                                }
+                            }
+                            )
+
+                            totalprice = totalprice + courseresult.course_price
+                            console.log(totalprice)
+                            if (cartresult.length - i === 1) {
+                                console.log("teeeeeeeeee")
+                                payment.payment.create({
+                                    payment_amount: totalprice,
+                                    cartid: cartid,
+                                    customerid: customer.id
+                                }).then(paymentresult => {
+                                    cart.crt.update({
+                                        purchased: true,
+                                    }, {
+                                        where: {
+                                            id: cartid
+                                        }
+                                    })
+
+                                        .catch(err => {
+                                            console.log("crt error update", err)
+                                        })
+                                }).catch(err => {
+                                    console.log("error in payment", err)
+
+                                })
+                            }
+                        }).catch(err => {
+                            console.log(err, "error in total price")
+                        })
+                }
+
+                // then(priceresult => {
+
+                // }).catch(err => {
+                //     console.log("error in price", err)
+                // })
+
+            }).then(result => {
+                res.json({ massage: "successfull" })
+            }).catch(err => {
+                console.log("error in cartresult")
+            })
+    }
+}
 exports.DELETEcoursefromcart = (req,res) =>{
 //  const cartId = req.query.cartId
  const courseId = req.params.courseId
@@ -536,18 +667,73 @@ exports.getCart = (req,res,next)=>{
 }
 
 exports.addTowishlist = async(req ,res) =>{
-
+    const courseId = req.params.courseId ;
+    let num_courses = 0
    const customer = await user.customer.findOne({
         where : {
             userId : req.userId
         }
      })
 
-     cart.wishlist.create({
+     cart.wishlist.findOne({
+        where : {
+            customerId : customer.id
+        }
+     }).then(wishlist =>{
+        if(!wishlist){
+        cart.wishlist.create({
+            total_courses : 1 ,
+            customerId : customer.id
+         }).then(newWishlist =>{
+            cart.course_wishlist.create({
+                courseId : courseId ,
+                WishlistId : newWishlist.id
+            }).then(course_wishlist=>{
+                res.json({massage : "new wishlist created successfully"})
+            }).catch(error=>{
+                console.log("error in creating course_wishlist" ,error)
+            })
+            // console.log("wishlist created successfully")
+           
+         }).catch((error) =>{
+            console.log(error , "Error creating wishlist")
+         })
+        }else if(wishlist){
+        num_courses = wishlist.total_courses + 1 
 
-     }).then((wishlist) =>{
+        cart.course_wishlist.findOne({
+            where : {
+                courseId : courseId ,
+                 WishlistId : wishlist.id
+            }
+        }).then(wishlistCheck =>{
+            if(!wishlistCheck){
+                cart.wishlist.update({
+                    total_courses: num_courses
+                },{
+                    where : {
+                        customerId : customer.id
+                    }
+                }).then((updatedWishlist) =>{
+                    cart.course_wishlist.create({
+                        courseId : courseId ,
+                        WishlistId : wishlist.id
+                    }).then(newAssociation =>{
+                        res.json({massage:"update wishlist successfull"})
+                    }).catch(err =>{
+                        console.log("error in making new association record ",err);
+                    })
+                   
+                }).catch((error) =>{
+                    console.log("Error updating wishlist",error)
+                })
+                
+            }else if(wishlistCheck){
+            res.json({massage:"course in wishlist already"})
+        }
+        })
+    }
 
-     }).catch((error) =>{
-        console.log(error , "Error creating wishlist")
      })
+    
 }

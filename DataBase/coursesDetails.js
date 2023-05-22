@@ -73,6 +73,14 @@ const connec = require('./DB_con');
     level : {
         type : Sequelize.STRING, 
         allowNul : false
+    } ,
+    number_of_student_completed_course : {
+        type : Sequelize.INTEGER ,
+        allowNul : true
+    },
+    no_clicks : {
+        type : Sequelize.INTEGER ,
+        allowNul : true
     }
     });
 
