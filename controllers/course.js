@@ -1,6 +1,8 @@
 const course = require('../DataBase/coursesDetails');
 const user = require('../DataBase/mainuserdata');
 const cart = require('../DataBase/Analysis');
+const payment = require('../DataBase/payment');
+const sequelize = require('sequelize');
 const mainproduct = require('../DataBase/mainproduct');
 const { payment } = require('../DataBase/payment');
 
@@ -348,7 +350,7 @@ exports.singlecoursepage = async (req, res) => {
         //   });
         //   console.log(result)
         // let showLessons = false
-        res.status(200).json({sections});
+        res.status(200).json({ sections });
     } catch (error) {
         res.status(500).json({ error: error });
     }
@@ -439,6 +441,120 @@ exports.postADDCart = async(req, res, next) => {
     // })
 }
 
+exports.DELETEcoursefromcart = (req, res) => {
+    const cartId = req.query.cartId
+    const courseId = req.query.courseId
+    cart.course_cart.destroy({
+        where: {
+            courseId: courseId,
+            cartId: cartId
+        }
+    }).then(deletedResult => {
+        console.log('successfull')
+        res.json({ massage: "deleted successfully" })
+    }).catch(err => console.log("error in delete course form cart", err))
+}
+
+
+
+
+
+
+exports.postpayment = async (req, res) => {
+    const cartid = req.params.cartid;
+    // const customerid=req.userId;
+    const customer = await user.customer.findOne({
+        where: {
+            userId: req.userId
+        }
+    })
+    {
+        var x = await (cart.course_cart.findAll({
+            where: {
+                cartid: cartid,
+            }
+        }))
+            .then(cartresult => {
+                var totalprice = 0.0
+                for (let i = 0; i < cartresult.length; i++) {
+                    course.course.findOne({
+                        where: {
+                            id: cartresult[i].courseId
+                        }
+                    })
+                        .then(courseresult => {
+                            course.cust_course.create({
+                                courseId: courseresult.id,
+                                customerId: customer.id
+                            })
+
+                            user.instructor.update({
+                                Num_of_Student_enrolled: sequelize.literal('Num_of_Student_enrolled + 1')
+                            }, {
+                                where: {
+                                    id: courseresult.instructorId
+                                }
+                            })
+                            user.customer.update({
+                                Total_Courses: sequelize.literal('Total_Courses + 1')
+                            }, {
+                                where: {
+                                    id: customer.id
+                                }
+                            }
+                            )
+                            course.course.update({
+                                num_student_enrolled: sequelize.literal('num_student_enrolled + 1')
+                            }, {
+                                where: {
+                                    id: courseresult.id
+                                }
+                            }
+                            )
+
+                            totalprice = totalprice + courseresult.course_price
+                            console.log(totalprice)
+                            if (cartresult.length - i === 1) {
+                                console.log("teeeeeeeeee")
+                                payment.payment.create({
+                                    payment_amount: totalprice,
+                                    cartid: cartid,
+                                    customerid: customer.id
+                                }).then(paymentresult => {
+                                    cart.crt.update({
+                                        purchased: true,
+                                    }, {
+                                        where: {
+                                            id: cartid
+                                        }
+                                    })
+
+                                        .catch(err => {
+                                            console.log("crt error update", err)
+                                        })
+                                }).catch(err => {
+                                    console.log("error in payment", err)
+
+                                })
+                            }
+                        }).catch(err => {
+                            console.log(err, "error in total price")
+                        })
+                }
+
+                // then(priceresult => {
+
+                // }).catch(err => {
+                //     console.log("error in price", err)
+                // })
+
+            }).then(result => {
+                res.json({ massage: "successfull" })
+            }).catch(err => {
+                console.log("error in cartresult")
+            })
+    }
+}
 exports.DELETEcoursefromcart = (req,res) =>{
 //  const cartId = req.query.cartId
  const courseId = req.params.courseId
