@@ -67,12 +67,12 @@ exports.POSTcourse = async (req, res, next) => {
                 courseId:courseresult.id
             })
         }
-        for(let i=0; i<pre.length; i++) {
-            course.prereq.create({
-                pre_name:pre[i],
-                courseId:courseresult.id
-            })
-        }
+        // for(let i=0; i<pre.length; i++) {
+        //     course.prereq.create({
+        //         pre_name:pre[i],
+        //         courseId:courseresult.id
+        //     })
+        // }
         for(let i=0; i<sections.length; i++) {
             course.sections.create({
                 section_name:sections[i].sectionName,
@@ -88,7 +88,7 @@ exports.POSTcourse = async (req, res, next) => {
                     })
                 }
             }).catch(error => {
-                console.log("error in sectionresult" ,error);
+                console.log("error in section result" ,error);
             })
            
         }
