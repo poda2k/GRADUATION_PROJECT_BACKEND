@@ -49,28 +49,28 @@ const FileStorageFORimages = multer.diskStorage( {
 } );
 
 // VIDEOS SECTION //
-// const fileFilterFORvideos = (req , file ,cb)=>{
-//     if(  
-//     file.mimetype === 'Videos/mp4' 
-//     // ||
-//     // file.mimetype === 'Videos/jpg' ||
-//     // file.mimetype === 'Videos/jpeg'
-//     ){
-//         cb(null,true)
-//     }
-//     cb(null,false)
-// }
-// const FileStorageFORvideos = multer.diskStorage( {
-//     destination: function ( req, file, cb ) {
-//         cb( null, 'Videos' );     // giving the destination and null error in the callback
-//     },
-//     filename: function ( req, file, cb ) {
-//         cb( null, 's' + uuidv4() + '-' + file.originalname );
-//     }
-// } );
+const fileFilterFORvideos = (req , file ,cb)=>{
+    if(  
+    file.mimetype === 'Videos/mp4' 
+    // ||
+    // file.mimetype === 'Videos/jpg' ||
+    // file.mimetype === 'Videos/jpeg'
+    ){
+        cb(null,true)
+    }
+    cb(null,false)
+}
+const FileStorageFORvideos = multer.diskStorage( {
+    destination: function ( req, file, cb ) {
+        cb( null, 'Videos' );     // giving the destination and null error in the callback
+    },
+    filename: function ( req, file, cb ) {
+        cb( null, 's' + uuidv4() + '-' + file.originalname );
+    }
+} );
 
 app.use( multer( { storage: FileStorageFORimages, fileFilter: fileFilterFORIMAGES } ).single( 'image' ) );
-// app.use( multer( { storage: FileStorageFORvideos, fileFilter: fileFilterFORvideos } ).single( 'Video' ) );
+// app.use( multer( { storage: FileStorageFORvideos, fileFilter: fileFilterFORvideos } ).array('videos') );
 
 app.use( bodyParser.json() );
 // const path1 = path.dirname(__filename);
