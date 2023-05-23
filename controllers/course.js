@@ -118,9 +118,6 @@ exports.POSTcourse = async (req, res, next) => {
 
 exports.GETcourse = (req, res) => {
     const id = req.params.courseId;
-
-
-
     course.course.findOne({
         where: {
             id: id
@@ -255,17 +252,18 @@ exports.Getinstructorconponent = (req, res) => {
         })
 }
 
-exports.Getinstructorprofile = (req, res) => {
+exports.Getinstructorprofile = async (req, res) => {
 
     const id = req.params.userId;
 
-    user.user.findOne({
+   const userInfo = await user.user.findOne({
         where: {
             id: id
         }
-    }).then(userINFO => {
+    })
+    // .then(userINFO => {
         user.instructor.findOne({
-            userId: userINFO.id
+            userId: userInfo.id
         }).then(instructorINFO => {
             course.course.findAll({
                 instructorId: instructorINFO.id
@@ -279,9 +277,9 @@ exports.Getinstructorprofile = (req, res) => {
         }).catch(err => {
             console.log(err)
         })
-    }).catch(err => {
-        console.log(err)
-    })
+    // }).catch(err => {
+    //     console.log(err)
+    // })
 
 }
 
@@ -652,7 +650,8 @@ exports.getCart = (req,res,next)=>{
                 }
                 console.log(arrayOfcourses);
                 console.log(total_price);
-                res.json({arrayOfcourses,total_price})
+                let cartId = crt.id
+                res.json({arrayOfcourses,total_price,cartId})
             
         }
             }).catch(error=>{
@@ -737,4 +736,59 @@ exports.addTowishlist = async(req ,res) =>{
 
      })
     
+}
+
+exports.GetWishlist = async(req , res) => {
+
+    const customer = await (user.customer.findOne({
+        where : {
+            userId : req.userId
+        }
+    }))
+
+    cart.wishlist.findOne({
+        where: {
+            customerId : customer.id
+        }
+    }).then(userWishlist => {
+        if(!userWishlist){
+            res.json({massage : "no wishlist found"})
+        }
+        cart.course_wishlist.findAll({
+            where :{
+                WishlistId : userWishlist.id
+            }
+        }).then(userWishlistWithcourse =>{
+            res.json({userWishlistWithcourse})
+        }).catch(err =>{
+            console.log("error in association table",err)
+        })
+    })
+}
+
+exports.getmylearning = async (req, res) => {
+    const customer = await user.customer.findOne({
+        where: {
+            userId: req.userId
+        }
+    })
+    course.cust_course.findAll({
+        where: {
+            customerId: customer.id
+        }
+    }).then(async(custOcourseresult) => {
+        for (let i = 0; i < custOcourseresult.length; i++) {
+           const courses= await course.course.findOne({
+                where: {
+                    id:custOcourseresult[i].courseId
+                }
+            })
+
+            if (custOcourseresult-i ===1){
+                res.json({courses})
+            }
+        }
+    }).catch(err => {
+        console.log(err, "error in custOcourseresult")
+    })
 }
