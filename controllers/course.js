@@ -20,7 +20,7 @@ exports.POSTcourse = async (req, res, next) => {
     const level = req.body.level;
     const category = req.body.category;
     const pre = req.body.pre;
-    // const image = req.file.path.split('\\').join('/');
+    const image = req.file.path.split('\\').join('/');
     const course_language = req.body.course_language;
     // const Video = req.file.path.split('\\').join('/');
     const total_hours = req.body.total_hours;
@@ -49,10 +49,11 @@ exports.POSTcourse = async (req, res, next) => {
     })
 
     course.course.create({
-        course_name: course_name,
-        course_price: course_price,
-        course_description: course_description,
-        course_language: course_language,
+        course_name:course_name,
+        course_price:course_price,
+        course_description:course_description,
+        course_image : image ,
+        course_language:course_language,
         course_rate: 0.0,
         num_student_enrolled: 0,
         level: level,
@@ -85,9 +86,10 @@ exports.POSTcourse = async (req, res, next) => {
             }).then(sectionresult => {
                 for (let j = 0; j < sections[i].lesson.length; j++) {
                     course.lesson.create({
-                        lesson_name: sections[i].lesson[j].lessonName,
-                        lesson_duration: sections[i].lesson[j].duration,
-                        SectionId: sectionresult.id
+                        lesson_name:sections[i].lesson[j].lessonName,
+                        lesson_duration:sections[i].lesson[j].duration,
+                        // Video : sections[i].lesson[j].Video ,
+                        SectionId:sectionresult.id
                     })
                 }
             }).catch(error => {
@@ -148,9 +150,7 @@ exports.GETcourse = (req, res) => {
                 }).catch(err => {
                     console.log(err);
                 })
-                // console.log(instructor_image);
-                // console.log(result.id)
-
+                
             })
                 .catch(err => {
                     console.log(err)
@@ -197,9 +197,7 @@ exports.GETcourseSidebarcard = (req, res) => {
                 }).catch(err => {
                     console.log(err);
                 })
-                // console.log(instructor_image);
-                // console.log(result.id)
-
+        
             })
                 .catch(err => {
                     console.log(err)
@@ -261,71 +259,24 @@ exports.Getinstructorprofile = async (req, res) => {
             id: id
         }
     })
-    // .then(userINFO => {
-    user.instructor.findOne({
-        userId: userInfo.id
-    }).then(instructorINFO => {
-        course.course.findAll({
-            instructorId: instructorINFO.id
-        }).then(courseinfo => {
-            if (!courseinfo) {
-                const err = new Error('no instructor found');
-                throw err;
-            }
-            res.json({ instructorName: [userINFO, instructorINFO, courseinfo] })
-        }).catch(err => { console.log(err) })
-    }).catch(err => {
-        console.log(err)
-    })
-    // }).catch(err => {
-    //     console.log(err)
-    // })
-
+        user.instructor.findOne({
+            userId: userInfo.id
+        }).then(instructorINFO => {
+            course.course.findAll({
+                instructorId: instructorINFO.id
+            }).then(courseinfo => {
+                if (!courseinfo) {
+                    const err = new Error('no instructor found');
+                    throw err;
+                }
+                res.json({ instructorName: [userINFO, instructorINFO, courseinfo] })
+            }).catch(err => { console.log(err) })
+        }).catch(err => {
+            console.log(err)
+        })
+   
 }
 
-// TL3 MYTYN ABONA FYHA //
-
-// exports.getcoursedeatails =(req,res) => {
-//     const id =req.params.courseid;
-
-//    course.sections.findAll({
-//     where : {
-//         courseId: id
-//     }
-//    }).then(sectionob => {
-//     for(let i = 0 ; i < sectionob.length; i++){
-//         course.lesson.findAll({
-//             where: {
-//                 SectionId : sectionob[i].id
-//             }
-//         }).then(lessonob => {
-//             // console.log(sectionob[i])
-//             // let temp = sectionob[i].section_name;
-//             lessonarray[i] = lessonob  ;
-
-//             // console.log(lessonarray[i]);
-
-//         }).catch(err => {
-//             console.log(err)
-//         })
-
-//     }
-//     function waitTIMER(){
-//         let count =1 
-//         return intervalId = setInterval( ()=>{
-//             res.json({sections : lessonarray })
-//             if (count === 1) {
-//                 clearInterval(intervalId);
-//               }
-//         }, 1000); 
-
-//     }
-//     waitTIMER();
-
-//    }).catch(err => {
-//     console.log(err)
-// })
-// }
 
 exports.singlecoursepage = async (req, res) => {
     const id = req.params.courseid;
