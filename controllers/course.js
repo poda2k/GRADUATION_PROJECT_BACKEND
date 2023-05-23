@@ -269,7 +269,7 @@ exports.Getinstructorprofile = async (req, res) => {
                     const err = new Error('no instructor found');
                     throw err;
                 }
-                res.json({ instructorName: [userINFO, instructorINFO, courseinfo] })
+                res.json({ instructorName: [userInfo, instructorINFO, courseinfo] })
             }).catch(err => { console.log(err) })
         }).catch(err => {
             console.log(err)
