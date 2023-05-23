@@ -710,7 +710,20 @@ exports.GetWishlist = async (req, res) => {
             where: {
                 WishlistId: userWishlist.id
             }
-        }).then(userWishlistWithcourse => {
+        }).then(async(userWishlistWithcourse) => {
+            let coursearray = []
+            for(let i=0 ; i<userWishlistWithcourse.length ; i++) {
+           const courses = await course.course.findOne({
+                where:{
+                    id : userWishlistWithcourse[i].courseId
+                }
+            })
+            coursearray.push(courses)
+                if(userWishlistWithcourse.length-i === 1){
+                    res.json({coursearray})
+                }
+           
+        }
             res.json({ userWishlistWithcourse })
         }).catch(err => {
             console.log("error in association table", err)
