@@ -453,6 +453,7 @@ exports.Postinstructor = (req, res, next) => {
                     userId:TEMP_id1 ,
                     Total_Courses_tech : 0 ,
                     Ins_Rate : 0,
+                    Num_of_Student_enrolled : 0 ,
                     Num_of_Total_Rates: 0 ,
                     specialization : speciality,
                     Admin_approvement_ins: false 
