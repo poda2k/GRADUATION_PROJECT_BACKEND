@@ -777,15 +777,16 @@ exports.getmylearning = async (req, res) => {
             customerId: customer.id
         }
     }).then(async(custOcourseresult) => {
+        let arrayofcourses =[]
         for (let i = 0; i < custOcourseresult.length; i++) {
            const courses= await course.course.findOne({
                 where: {
                     id:custOcourseresult[i].courseId
                 }
             })
-
-            if (custOcourseresult-i ===1){
-                res.json({courses})
+            arrayofcourses.push(courses)
+            if (custOcourseresult.length-i ===1){
+                res.json({arrayofcourses})
             }
         }
     }).catch(err => {
