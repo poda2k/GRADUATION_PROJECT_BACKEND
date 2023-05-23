@@ -16,6 +16,14 @@ purchased : {
     allowNull : false
 }
 });
+const course_wishlist = connec.define('courses_wishlist',{
+    id : {
+        type:Sequelize.INTEGER ,
+        autoIncrement : true ,
+        allowNull : false,
+        primaryKey : true
+    }
+});
 
 const course_cart = connec.define('course_cart',{
     id :{
@@ -48,5 +56,6 @@ module.exports={
     crt,
     search_his,
     intrst ,
-    course_cart
+    course_cart ,
+    course_wishlist
 }

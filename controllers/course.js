@@ -7,6 +7,7 @@ const mainproduct = require('../DataBase/mainproduct');
 
 
 
+
 let instructor_image;
 
 
@@ -26,88 +27,88 @@ exports.POSTcourse = async (req, res, next) => {
     const sections = req.body.sections;
     console.log(sections.length)
     console.log(sections[0].lesson.length)
-    let num_lessons = 0;
-    for (let i = 0; i < sections.length; i++) {
-        num_lessons = num_lessons + sections[i].lesson.length;
+    let num_lessons =0;
+    for(let i = 0; i < sections.length; i++) {
+        num_lessons=num_lessons+sections[i].lesson.length;
     }
     console.log(num_lessons)
-
-
-    // const topicdetails = await mainproduct.topic.findOne({
-    //      where: {
-    //         Topic_Name: category
-    //      }
-    //  })
-
-
-
-    const insDeltails = await user.instructor.findOne({
+    
+  
+        // const topicdetails = await mainproduct.topic.findOne({
+        //      where: {
+        //         Topic_Name: category
+        //      }
+        //  })
+    
+    
+   
+   const insDeltails = await user.instructor.findOne({
         where: {
             userId: req.userId
         }
     })
-
+    
     course.course.create({
-        course_name: course_name,
-        course_price: course_price,
-        course_description: course_description,
-        course_language: course_language,
+        course_name:course_name,
+        course_price:course_price,
+        course_description:course_description,
+        course_language:course_language,
         course_rate: 0.0,
-        num_student_enrolled: 0,
-        level: level,
+        num_student_enrolled:0,
+        level:level,
         // topicId:topicdetails.id,
-        Instructor_name: req.userNAME,
-        num_sections: sections.length,
-        num_lesson: num_lessons,
+        Instructor_name:req.userNAME,
+        num_sections:sections.length,
+        num_lesson:num_lessons,
         course_active: 1,
         admin_active: 0,
-        instructorId: insDeltails.id
-    }).then(courseresult => {
-        for (let i = 0; i < skilled_learn.length; i++) {
-            course.skillgain.create({
-                skill_gain_name: skilled_learn[i],
-                courseId: courseresult.id
-            })
-        }
+        instructorId:insDeltails.id
+    }).then(courseresult =>{
+        // for(let i=0; i<skilled_learn.length; i++) {
+        //     course.skillgain.create({
+        //         skill_gain_name:skilled_learn[i],
+        //         courseId:courseresult.id
+        //     })
+        // }
         // for(let i=0; i<pre.length; i++) {
         //     course.prereq.create({
         //         pre_name:pre[i],
         //         courseId:courseresult.id
         //     })
         // }
-        for (let i = 0; i < sections.length; i++) {
+        for(let i=0; i<sections.length; i++) {
             course.sections.create({
-                section_name: sections[i].sectionName,
-                courseId: courseresult.id,
-                section_lesson: sections[i].lesson.length,
+                section_name:sections[i].sectionName,
+                courseId:courseresult.id,
+                section_lesson:sections[i].lesson.length,
                 showLessons: 0
-            }).then(sectionresult => {
-                for (let j = 0; j < sections[i].lesson.length; j++) {
+            }).then(sectionresult =>{
+                for(let j=0; j<sections[i].lesson.length; j++) {
                     course.lesson.create({
-                        lesson_name: sections[i].lesson[j].lessonName,
-                        lesson_duration: sections[i].lesson[j].duration,
-                        SectionId: sectionresult.id
+                        lesson_name:sections[i].lesson[j].lessonName,
+                        lesson_duration:sections[i].lesson[j].duration,
+                        SectionId:sectionresult.id
                     })
                 }
             }).catch(error => {
-                console.log("error in sectionresult", error);
+                console.log("error in sectionresult" ,error);
             })
-
+           
         }
-        function waitTIMER() {
-            let count = 1
-            return intervalId = setInterval(() => {
-                res.json({ massage: "TOP JOB" })
-                if (count === 1) {
-                    clearInterval(intervalId);
+        function waitTIMER(){
+                    let count =1 
+                    return intervalId = setInterval( ()=>{
+                        res.json({massage: "TOP JOB" })
+                        if (count === 1) {
+                            clearInterval(intervalId);
+                          }
+                    }, 1000); 
+            
                 }
-            }, 1000);
+                waitTIMER();
 
-        }
-        waitTIMER();
-
-    }).catch(err => {
-        console.log("error in course creation", err)
+    }).catch(err =>{
+        console.log("error in course creation",err)
     })
 
 
@@ -117,9 +118,6 @@ exports.POSTcourse = async (req, res, next) => {
 
 exports.GETcourse = (req, res) => {
     const id = req.params.courseId;
-
-
-
     course.course.findOne({
         where: {
             id: id
@@ -254,17 +252,18 @@ exports.Getinstructorconponent = (req, res) => {
         })
 }
 
-exports.Getinstructorprofile = (req, res) => {
+exports.Getinstructorprofile = async (req, res) => {
 
     const id = req.params.userId;
 
-    user.user.findOne({
+   const userInfo = await user.user.findOne({
         where: {
             id: id
         }
-    }).then(userINFO => {
+    })
+    // .then(userINFO => {
         user.instructor.findOne({
-            userId: userINFO.id
+            userId: userInfo.id
         }).then(instructorINFO => {
             course.course.findAll({
                 instructorId: instructorINFO.id
@@ -278,9 +277,9 @@ exports.Getinstructorprofile = (req, res) => {
         }).catch(err => {
             console.log(err)
         })
-    }).catch(err => {
-        console.log(err)
-    })
+    // }).catch(err => {
+    //     console.log(err)
+    // })
 
 }
 
@@ -355,14 +354,15 @@ exports.singlecoursepage = async (req, res) => {
     }
 }
 
-exports.postADDCart = (req, res, next) => {
+exports.postADDCart = async(req, res, next) => {
     const courseID = req.params.courseID;
     let num_courses
-    user.customer.findOne({
+   const customer = await user.customer.findOne({
         where: {
             userId: req.userId
         }
-    }).then(customer => {
+    })
+    // .then(customer => {
         cart.crt.findOne({
             where: {
                 customerId: customer.id,
@@ -385,44 +385,58 @@ exports.postADDCart = (req, res, next) => {
                 }).catch(err => {
                     console.log("error in create cart", err);
                 })
-            }
-
+            }else if(cartINFO){
             num_courses = cartINFO.num_courses + 1;
-            cart.crt.update({
-                num_courses: num_courses
-            }, {
+            cart.course_cart.findOne({
                 where: {
-                    customerId: customer.id,
-                    purchased: false
-                }
+                courseId : courseID ,
+                cartId : cartINFO.id
             }
-            ).then(CRT => {
-                cart.course_cart.findOne({
+            }).then(checkforCoursesincart =>{
+                if(!checkforCoursesincart){
+                cart.crt.update({
+                    num_courses: num_courses
+                }, {
                     where: {
-                        courseId: courseID
+                        customerId: customer.id,
+                        purchased: false
                     }
-                }).then(CRT_COURSE => {
-                    if (!CRT_COURSE) {
-                        cart.course_cart.create({
-                            courseId: courseID,
-                            cartId: cartINFO.id
-                        }).then(data => {
-                            console.log("new course added to cart_course")
-                            res.json({ massage: "we done here" })
-                        }).catch(error => console.log(error));
-                    }
-                    console.log("course in cart_course")
-                }).catch(err => console.log("err"))
-                console.log("num_courses updated")
-            }).catch(err => { console.log(err); });
+                }
+                ).then(CRT => {
+                    // cart.course_cart.findOne({
+                    //     where: {
+                    //         courseId: courseID
+                    //     }
+                    // }).then(CRT_COURSE => {
+                        // if (!CRT_COURSE) {
+                            cart.course_cart.create({
+                                courseId: courseID,
+                                cartId: cartINFO.id
+                            }).then(data => {
+                                console.log("new course added to cart_course")
+                                res.json({ massage: "we done here" })
+                            }).catch(error => console.log(error));
+                        // }
+                        // console.log("course in cart_course")
+                    // }).catch(err => console.log("err"))
+                    // console.log("num_courses updated")
+                }).catch(err => { console.log(err); });
+            }else if(checkforCoursesincart){
+                res.json({massage : "course already in cart"})
+            }
+            
+            }).catch(err => {
+                 console.log("error in checkforCoursesincart",err);
+                 });
+           }
 
 
         }).catch(err => {
             console.log("error in cart")
         })
-    }).catch(err => {
-        console.log(err);
-    })
+    // }).catch(err => {
+    //     console.log(err);
+    // })
 }
 
 exports.DELETEcoursefromcart = (req, res) => {
@@ -539,135 +553,219 @@ exports.postpayment = async (req, res) => {
             })
     }
 }
-exports.DELETEcoursefromcart = (req, res) => {
-    //  const cartId = req.query.cartId
-    const courseId = req.params.courseId
-    console.log(req.userId)
-    user.customer.findOne({
-        where: {
-            userId: req.userId
-        }
-    }).then(CUSinfo => {
-        cart.crt.findOne({
-            where: {
-                customerId: CUSinfo.id,
-                purchased: false
+exports.DELETEcoursefromcart = (req,res) =>{
+//  const cartId = req.query.cartId
+ const courseId = req.params.courseId
+console.log(req.userId)
+  user.customer.findOne({
+    where : {
+        userId : req.userId
+    }
+ }).then(CUSinfo =>{
+    cart.crt.findOne({
+         where :{
+            customerId : CUSinfo.id ,
+             purchased :false
             }
-        }).then(CARTinfo => {
-            let num_courses = CARTinfo.num_courses - 1;
-            cart.crt.update({
-                num_courses: num_courses
-            }, {
-                where: {
-                    customerId: CUSinfo.id,
-                    purchased: false
-                }
-            }).then(updatedresult => {
-                cart.course_cart.destroy({
-                    where: {
-                        courseId: courseId,
-                        cartId: CARTinfo.id
-                    }
-                }).then(deletedResult => {
-                    console.log('successfull')
-                    res.json({ massage: "deleted successfully" })
-                }).catch(err => console.log("error in delete course_cart", err))
-            }).catch(err => {
-                console.log("error in update operation", err);
-            })
-        }).catch(err => { console.log(err) })
+        }).then(CARTinfo =>{
+            let num_courses = CARTinfo.num_courses -1 ;
+        cart.crt.update({
+            num_courses : num_courses
+        },{
+            where : {
+                customerId : CUSinfo.id,
+                purchased : false
+            }
+        }).then(updatedresult =>{
+             cart.course_cart.destroy({
+        where : {
+            courseId : courseId ,
+            cartId : CARTinfo.id
+        }
+             }).then(deletedResult => {
+                 console.log('successfull')
+                 res.json({ massage: "deleted successfully" })
+             }).catch(err => console.log("error in delete course_cart", err))
+        }).catch(err =>{
+            console.log("error in update operation", err);
+        })
+    }).catch(err =>{console.log(err)})
+    
+ }).catch(err =>{
+    console.log("error in delete from cart" ,err)
+ })
 
-    }).catch(err => {
-        console.log("error in delete from cart", err)
-    })
+//  const usercart = await cart.crt.findOne({
+//     where : {
+//         customerId : customer.id
+//     }
+//  })
 
-    //  const usercart = await cart.crt.findOne({
-    //     where : {
-    //         customerId : customer.id
-    //     }
-    //  })
+//  let num_courses = usercart.num_courses -1 ;
 
-    //  let num_courses = usercart.num_courses -1 ;
-
-    //  const DELETEonefromcart = await cart.crt.update({
-    //     num_courses : num_courses
-    //  },{
-    //     where : {
-    //         customer_id : customer.id
-    //     }
-    //  })
-    //  cart.course_cart.destroy({
-    //     where : {
-    //         courseId : courseId ,
-    //         cartId : cartId
-    //     }
-    //  }).then(deletedResult=>{
-    //     console.log('successfull')
-    //     res.json({massage : "deleted successfully"})
-    //  }).catch(err => console.log("error in delete course form cart" ,err))
+//  const DELETEonefromcart = await cart.crt.update({
+//     num_courses : num_courses
+//  },{
+//     where : {
+//         customer_id : customer.id
+//     }
+//  })
+//  cart.course_cart.destroy({
+//     where : {
+//         courseId : courseId ,
+//         cartId : cartId
+//     }
+//  }).then(deletedResult=>{
+//     console.log('successfull')
+//     res.json({massage : "deleted successfully"})
+//  }).catch(err => console.log("error in delete course form cart" ,err))
 }
 
-exports.getCart = (req, res, next) => {
-
+exports.getCart = (req,res,next)=>{
+   
     user.customer.findOne({
-        userId: req.userId
-    }).then(CUSinfo => {
+        userId : req.userId
+    }).then(CUSinfo =>{
         cart.crt.findOne({
-            where: {
-                customerId: CUSinfo.id,
-                purchased: false
+            where:{
+                customerId : CUSinfo.id ,
+                purchased : false
             }
         }).then(crt => {
             cart.course_cart.findAll({
-                where: {
-                    cartId: crt.id
+                where:{
+                    cartId : crt.id
                 }
-            }).then(async (courses) => {
+            }).then( async (courses) =>{
                 let arrayOfcourses = []
                 let total_price = 0
                 {
-                    for (let i = 0; i < courses.length; i++) {
-                        var x = (await (course.course.findOne({
-                            where: {
-                                id: courses[i].courseId
-                            }
-                        })))
-                        arrayOfcourses = [...arrayOfcourses, x]
-                        total_price = total_price + x.course_price
-                    }
-                    console.log(arrayOfcourses);
-                    console.log(total_price);
-                    res.json({ arrayOfcourses, total_price })
-
+                for(let i=0 ; i<courses.length ; i++){
+                var x = (await (course.course.findOne({
+                    where : {
+                        id : courses[i].courseId
+                    }})))
+                    arrayOfcourses = [...arrayOfcourses, x]
+                    total_price = total_price + x.course_price
                 }
-            }).catch(error => {
-                console.log("error in association table ", error);
+                console.log(arrayOfcourses);
+                console.log(total_price);
+                let cartId = crt.id
+                res.json({arrayOfcourses,total_price,cartId})
+            
+        }
+            }).catch(error=>{
+                console.log("error in association table ",error);
             })
         }).catch(err => {
             console.log("error in")
         })
-    }).catch(err => {
+    }).catch(err =>{
         console.log("error in getting cart")
     })
-
+    
 }
 
-exports.addTowishlist = async (req, res) => {
-
-    const customer = await user.customer.findOne({
-        where: {
-            userId: req.userId
+exports.addTowishlist = async(req ,res) =>{
+    const courseId = req.params.courseId ;
+    let num_courses = 0
+   const customer = await user.customer.findOne({
+        where : {
+            userId : req.userId
         }
-    })
+     })
 
-    cart.wishlist.create({
+     cart.wishlist.findOne({
+        where : {
+            customerId : customer.id
+        }
+     }).then(wishlist =>{
+        if(!wishlist){
+        cart.wishlist.create({
+            total_courses : 1 ,
+            customerId : customer.id
+         }).then(newWishlist =>{
+            cart.course_wishlist.create({
+                courseId : courseId ,
+                WishlistId : newWishlist.id
+            }).then(course_wishlist=>{
+                res.json({massage : "new wishlist created successfully"})
+            }).catch(error=>{
+                console.log("error in creating course_wishlist" ,error)
+            })
+            // console.log("wishlist created successfully")
+           
+         }).catch((error) =>{
+            console.log(error , "Error creating wishlist")
+         })
+        }else if(wishlist){
+        num_courses = wishlist.total_courses + 1 
 
-    }).then((wishlist) => {
+        cart.course_wishlist.findOne({
+            where : {
+                courseId : courseId ,
+                 WishlistId : wishlist.id
+            }
+        }).then(wishlistCheck =>{
+            if(!wishlistCheck){
+                cart.wishlist.update({
+                    total_courses: num_courses
+                },{
+                    where : {
+                        customerId : customer.id
+                    }
+                }).then((updatedWishlist) =>{
+                    cart.course_wishlist.create({
+                        courseId : courseId ,
+                        WishlistId : wishlist.id
+                    }).then(newAssociation =>{
+                        res.json({massage:"update wishlist successfull"})
+                    }).catch(err =>{
+                        console.log("error in making new association record ",err);
+                    })
+                   
+                }).catch((error) =>{
+                    console.log("Error updating wishlist",error)
+                })
+                
+            }else if(wishlistCheck){
+            res.json({massage:"course in wishlist already"})
+        }
+        })
+    }
 
-    }).catch((error) => {
-        console.log(error, "Error creating wishlist")
+     })
+    
+}
+
+exports.GetWishlist = async(req , res) => {
+
+    const customer = await (user.customer.findOne({
+        where : {
+            userId : req.userId
+        }
+    }))
+
+    cart.wishlist.findOne({
+        where: {
+            customerId : customer.id
+        }
+    }).then(userWishlist => {
+        if(!userWishlist){
+            res.json({massage : "no wishlist found"})
+        }
+        cart.course_wishlist.findAll({
+            where :{
+                WishlistId : userWishlist.id
+            }
+        }).then(userWishlistWithcourse =>{
+            res.json({userWishlistWithcourse})
+        }).catch(err =>{
+            console.log("error in association table",err)
+        })
     })
 }
+
 exports.getmylearning = async (req, res) => {
     const customer = await user.customer.findOne({
         where: {
