@@ -4,6 +4,7 @@ const cart = require('../DataBase/Analysis');
 const payment = require('../DataBase/payment');
 const sequelize = require('sequelize');
 const mainproduct = require('../DataBase/mainproduct');
+const { payment } = require('../DataBase/payment');
 
 
 
