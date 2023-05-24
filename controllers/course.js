@@ -828,3 +828,31 @@ exports.deletewishlist = async (req, res) => {
         console.log(err, "error in ourse_wishlist.destroy")
     })
 }
+exorsts.deletecourse = async (req, res) => {
+    const courseId = req.params.courseId;
+   const course= await (course.course.findOne({
+        where: {
+            id:courseId
+        }
+    }))
+   
+        user.instructor.update({
+            Total_Courses_tech: Total_Courses_tech-1,
+            Num_of_Student_enrolled :Num_of_Student_enrolled - course.num_student_enrolled
+        },
+        {where:{
+            id:course.instructorId
+        }}
+    )
+        course.course.destroy({
+            where: {
+                id: courseId
+            }
+
+        }).then(deletecourse => {
+            res.json({ deletecourse })
+        }).catch(err => {
+            console.log(err, "error in delete course")
+        })
+    }
+    

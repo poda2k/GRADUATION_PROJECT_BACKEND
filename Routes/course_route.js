@@ -26,8 +26,7 @@ router.post('/course/purchase/:cartid',Auth.userAuth,course.postpayment);
 
 router.delete('/cart/deletecoursefromcart/:courseId',Auth.userAuth,course.DELETEcoursefromcart);
 router.delete('/wishlist/delete/:courseId',Auth.userAuth,course.deletewishlist);
-
-
+router.delete('/course/delete/:courseId',Auth.Admin,course.deletecourse);
 //  DELETE  //
 
 module.exports = router;
